@@ -16,17 +16,18 @@ const Header: React.FC = () => {
 
   return (
     <header
+      id="header"
       className={`sticky top-0 p-3 z-10 transition-all duration-300 ease-linear max-w-screen-sm mx-auto lg:max-w-full lg:px-12 lg:py-4 flex items-center justify-between ${
         scrolled
           ? "border-b border-b-border-primary bg-white"
           : "bg-transparent"
       }`}
     >
-      <button className="flex items-center gap-2 bg-white px-4 py-1 rounded-2xl">
+      <button className="flex items-center gap-2 bg-white px-4 py-2 rounded-3xl">
         <IoMenuOutline className="" />
         <span className="text-sm">Danh mục</span>
       </button>
-      <div className="text-2xl font-bold">
+      <div className="text-3xl font-bold">
         <span className="text-[#2a2a86]">F</span>
         <span className="text-[#fcaf17]">Store</span>
       </div>
