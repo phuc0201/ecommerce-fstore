@@ -2,9 +2,16 @@ import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { IoMenuOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import { useEffect, useState } from "react";
+import MegaMenu from "./MegaMenu";
+import { Link } from "react-router";
 
 const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
+
+  const handleMenuClick = () => {
+    setIsMegaMenuOpen((prev) => !prev);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,24 +30,42 @@ const Header: React.FC = () => {
           : "bg-transparent"
       }`}
     >
-      <button className="flex items-center gap-2 bg-white px-4 py-2 rounded-3xl">
+      <MegaMenu
+        isMegaMenuOpen={isMegaMenuOpen}
+        setIsMegaMenuOpen={setIsMegaMenuOpen}
+      />
+      <button
+        onClick={() => handleMenuClick()}
+        className="flex items-center gap-2 bg-white px-4 py-2 rounded-3xl"
+      >
         <IoMenuOutline className="" />
         <span className="text-sm">Danh mục</span>
       </button>
-      <div className="text-3xl font-bold">
+      <div className="text-2xl font-bold">
         <span className="text-[#2a2a86]">F</span>
         <span className="text-[#fcaf17]">Store</span>
       </div>
       <div className="flex items-center gap-2">
-        <button
+        <div
           className={`flex items-center gap-2 bg-white px-5 py-2 w-52 rounded-2xl border border-transparent hover:border-zinc-300 duration-300 transition-all ease-linear ${
             scrolled ? "border-zinc-300" : ""
           }`}
         >
           <CiSearch className="" />
-          <span className="text-xs text-zinc-400">Tìm kiếm</span>
-        </button>
+          <input
+            type="text"
+            placeholder="Tìm kiếm"
+            className="w-full outline-none focus:ring-0 focus:border-0 text-xs placeholder:text-xs"
+          />
+        </div>
         <HiOutlineShoppingBag className="text-2xl" />
+
+        <Link
+          to={"/login"}
+          className="bg-[#fcaf17] text-zinc-100 font-medium p-2 px-3 text-xs rounded-lg"
+        >
+          Login
+        </Link>
       </div>
     </header>
   );

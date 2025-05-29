@@ -11,6 +11,23 @@
   font-family: "Montserrat", sans-serif;
 }
 
+html,
+body {
+  scrollbar-gutter: stable;
+}
+
+.small-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+  padding-right: 2px;
+  transition: scrollbar-color 0.3s;
+  scrollbar-color: transparent transparent;
+}
+
+.small-scrollbar:hover {
+  scrollbar-color: #0003 transparent;
+}
+
 .sectionContainer {
   display: flex;
   flex-direction: column;
