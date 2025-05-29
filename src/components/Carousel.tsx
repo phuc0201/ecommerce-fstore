@@ -5,29 +5,55 @@ import { GoChevronRight } from "react-icons/go";
 const Carousel: React.FC<{
   slides: { id: number; image: string; alt: string }[];
 }> = ({ slides }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(1);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(true);
+
+  const extendedSlides = [slides[slides.length - 1], ...slides, slides[0]];
+  const totalSlides = slides.length;
 
   useEffect(() => {
     if (!isAutoPlaying) return;
 
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+      nextSlide();
+    }, 3000);
 
     return () => clearInterval(interval);
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, currentSlide]);
+
+  useEffect(() => {
+    if (currentSlide === 0) {
+      setTimeout(() => {
+        setIsAnimating(false);
+        setCurrentSlide(totalSlides);
+        setTimeout(() => setIsAnimating(true), 50);
+      }, 500);
+    } else if (currentSlide === extendedSlides.length - 1) {
+      setTimeout(() => {
+        setIsAnimating(false);
+        setCurrentSlide(1);
+        setTimeout(() => setIsAnimating(true), 50);
+      }, 500);
+    }
+  }, [currentSlide]);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
+    setCurrentSlide((prev) => prev + 1);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    setCurrentSlide((prev) => prev - 1);
   };
 
   const goToSlide = (index: number) => {
-    setCurrentSlide(index);
+    setCurrentSlide(index + 1);
+  };
+
+  const getActualSlideIndex = () => {
+    if (currentSlide === 0) return totalSlides - 1;
+    if (currentSlide === extendedSlides.length - 1) return 0;
+    return currentSlide - 1;
   };
 
   return (
@@ -40,11 +66,13 @@ const Carousel: React.FC<{
       >
         {/* Slides */}
         <div
-          className="flex transition-transform duration-500 ease-in-out h-full"
+          className={`flex h-full  ${
+            isAnimating ? "transition-transform duration-500 ease-in-out" : ""
+          }`}
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
-          {slides.map((slide) => (
-            <div key={slide.id} className="w-full h-full flex-shrink-0">
+          {extendedSlides.map((slide, index) => (
+            <div key={slide.id + index} className="w-full h-full flex-shrink-0">
               <img
                 src={slide.image || "/placeholder.svg"}
                 alt={slide.alt || "Promotional slide"}
@@ -77,7 +105,7 @@ const Carousel: React.FC<{
             <button
               key={index}
               className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                index === currentSlide
+                index === getActualSlideIndex()
                   ? "bg-white scale-125"
                   : "bg-white/50 hover:bg-white/75"
               }`}

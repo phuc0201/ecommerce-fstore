@@ -108,9 +108,8 @@ const MegaMenu: React.FC<MegaMenuProps> = (props) => {
                     {getSubCategories(item.id).map((itemSub, index) => {
                       const isOpen = expandedCategories.includes(itemSub.id);
                       return (
-                        <div>
+                        <div key={index}>
                           <div
-                            key={index}
                             onClick={() => toggleCategory(itemSub.id)}
                             className="flex items-center justify-between gap-3 py-2"
                           >
@@ -142,6 +141,7 @@ const MegaMenu: React.FC<MegaMenuProps> = (props) => {
                   return (
                     <div key={index} className="block group pb-3">
                       <img
+                        loading="lazy"
                         src={`${item.image}`}
                         alt=""
                         className="rounded-lg mb-1"
