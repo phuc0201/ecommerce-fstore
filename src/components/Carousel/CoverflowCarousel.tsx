@@ -112,7 +112,7 @@ const CoverflowCarousel: React.FC<Props> = ({ slides }) => {
             >
               <GoChevronLeft className="w-6 h-6 m-auto" />
             </button>
-            <div>
+            <div className="w-10 text-center">
               {currentIndex + 1} / {slides.length}
             </div>
             <button
