@@ -8,7 +8,7 @@ import { FaYoutube } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-[#111928] text-white py-10">
+    <footer className="w-full bg-[#111928] text-white py-10 mt-16">
       <div className="max-w-[1440px] grid divide-y-[1px] divide-zinc-600/30 m-auto">
         <div className="py-5 grid grid-cols-3 gap-20 items-start">
           <div className="grid gap-4">
