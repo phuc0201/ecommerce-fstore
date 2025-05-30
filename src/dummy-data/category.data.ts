@@ -1,4 +1,4 @@
-import type { Category } from "../models/category.model";
+import type { Category } from "../types/category.type";
 
 export const categoryDummyData: Category[] = [
   {

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { GoChevronLeft } from "react-icons/go";
 import { GoChevronRight } from "react-icons/go";
+import type { CarouselProps } from "../../types/carousel.type";
 
-const Carousel: React.FC<{
-  slides: { id: number; image: string; alt: string }[];
-}> = ({ slides }) => {
+const NormalCarousel: React.FC<CarouselProps> = ({ slides }) => {
+  const TRANSITION_DURATION = 1000;
+  if (slides.length === 0) return;
+
   const [currentSlide, setCurrentSlide] = useState(1);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isAnimating, setIsAnimating] = useState(true);
@@ -17,7 +19,7 @@ const Carousel: React.FC<{
 
     const interval = setInterval(() => {
       nextSlide();
-    }, 3000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [isAutoPlaying, currentSlide]);
@@ -28,13 +30,13 @@ const Carousel: React.FC<{
         setIsAnimating(false);
         setCurrentSlide(totalSlides);
         setTimeout(() => setIsAnimating(true), 50);
-      }, 500);
+      }, TRANSITION_DURATION);
     } else if (currentSlide === extendedSlides.length - 1) {
       setTimeout(() => {
         setIsAnimating(false);
         setCurrentSlide(1);
         setTimeout(() => setIsAnimating(true), 50);
-      }, 500);
+      }, TRANSITION_DURATION);
     }
   }, [currentSlide]);
 
@@ -60,25 +62,31 @@ const Carousel: React.FC<{
     <div className="relative w-full">
       {/* Main carousel container */}
       <div
-        className="relative overflow-hidden shadow-2xl"
+        className="relative overflow-hidden"
         onMouseEnter={() => setIsAutoPlaying(false)}
         onMouseLeave={() => setIsAutoPlaying(true)}
       >
         {/* Slides */}
         <div
           className={`flex h-full  ${
-            isAnimating ? "transition-transform duration-500 ease-in-out" : ""
-          }`}
+            isAnimating
+              ? `transition-transform ease-in-out ${"duration-1000"}`
+              : ""
+          }
+          ${"translate-x-" + currentSlide * 100}
+          `}
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
           {extendedSlides.map((slide, index) => (
-            <div key={slide.id + index} className="w-full h-full flex-shrink-0">
+            <div
+              key={slide.id + index}
+              className={`h-full flex-shrink-0 w-full`}
+            >
               <img
                 src={slide.image || "/placeholder.svg"}
                 alt={slide.alt || "Promotional slide"}
                 className="object-cover w-full h-full"
                 loading={slide.id === 1 ? "eager" : "lazy"}
-                style={{ objectFit: "cover" }}
               />
             </div>
           ))}
@@ -106,7 +114,7 @@ const Carousel: React.FC<{
               key={index}
               className={`w-2 h-2 rounded-full transition-all duration-200 ${
                 index === getActualSlideIndex()
-                  ? "bg-white scale-125"
+                  ? "bg-white w-8"
                   : "bg-white/50 hover:bg-white/75"
               }`}
               onClick={() => goToSlide(index)}
@@ -118,4 +126,4 @@ const Carousel: React.FC<{
   );
 };
 
-export default Carousel;
+export default NormalCarousel;

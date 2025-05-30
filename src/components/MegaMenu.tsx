@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Category } from "../models/category.model";
+import type { Category } from "../types/category.type";
 import { categoryDummyData } from "../dummy-data/category.data";
 import { Link } from "react-router";
 import { CiShop } from "react-icons/ci";

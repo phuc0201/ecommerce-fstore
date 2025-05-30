@@ -1,4 +1,4 @@
-import type { Collection } from "../models/collection.model";
+import type { Collection } from "../types/collection.type";
 
 export const collectionDummyData: Collection[] = [
   {
