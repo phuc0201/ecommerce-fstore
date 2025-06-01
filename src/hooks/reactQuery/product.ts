@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { ProductService } from "../../services/product.service";
 
 interface UseInfiniteProductsParams {
@@ -21,7 +21,7 @@ export function useInfiniteProducts({
           return res;
         }
       ),
-    getNextPageParam: (lastPage, allPages) => {
+    getNextPageParam: (lastPage) => {
       const nextPage = lastPage.page + 1;
       return nextPage < lastPage.totalPages ? nextPage : undefined;
     },
