@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Category } from "../types/category.type";
 import { categoryDummyData } from "../dummy-data/category.data";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { CiShop } from "react-icons/ci";
 import { PiNewspaperClippingThin } from "react-icons/pi";
 import { PiGiftThin } from "react-icons/pi";
@@ -10,6 +10,7 @@ import { PiShirtFoldedThin } from "react-icons/pi";
 import { GoArrowUpRight } from "react-icons/go";
 import { SlArrowDown } from "react-icons/sl";
 import { collectionDummyData } from "../dummy-data/collection.data";
+import PATH from "../constants/routePaths";
 
 type MegaMenuProps = {
   isMegaMenuOpen: boolean;
@@ -18,6 +19,7 @@ type MegaMenuProps = {
 
 const MegaMenu: React.FC<MegaMenuProps> = (props) => {
   const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
+  const location = useLocation();
 
   const toggleCategory = (id: number) => {
     setExpandedCategories((prev) =>
@@ -46,6 +48,10 @@ const MegaMenu: React.FC<MegaMenuProps> = (props) => {
     };
   }, [props.isMegaMenuOpen]);
 
+  useEffect(() => {
+    props.setIsMegaMenuOpen(false);
+  }, [location.pathname]);
+
   return (
     <>
       <div
@@ -58,7 +64,7 @@ const MegaMenu: React.FC<MegaMenuProps> = (props) => {
         <div className="w-full h-full bg-white text-black p-5 px-12">
           {/* HEADER */}
           <div className="flex justify-center items-center gap-3 w-full">
-            <Link to={""}>
+            <Link to={PATH.CATEGORY}>
               <div className="flex items-center gap-2 text-base bg-zinc-100 rounded-xl p-2 px-3">
                 <CiShop className="text-3xl" />
                 <p className="uppercase">cửa hàng</p>

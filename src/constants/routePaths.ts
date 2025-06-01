@@ -1,5 +1,6 @@
 const PATH = {
   HOME: "/",
+  CATEGORY: "/category",
   PRODUCT_DETAIL: "/product/:slug",
   CART: "/cart",
   CHECKOUT: "/checkout",

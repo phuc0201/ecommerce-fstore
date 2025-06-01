@@ -3,9 +3,10 @@ import { IoMenuOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import { useEffect, useState } from "react";
 import MegaMenu from "./MegaMenu";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 const Header: React.FC = () => {
+  const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
 
@@ -25,7 +26,7 @@ const Header: React.FC = () => {
     <header
       id="header"
       className={`sticky top-0 p-3 z-10 transition-all duration-300 ease-linear max-w-screen-sm mx-auto lg:max-w-full lg:px-12 lg:py-4 flex items-center justify-between ${
-        scrolled
+        scrolled || location.pathname !== "/"
           ? "border-b border-b-border-primary bg-white"
           : "bg-transparent"
       }`}
@@ -36,19 +37,21 @@ const Header: React.FC = () => {
       />
       <button
         onClick={() => handleMenuClick()}
-        className="flex items-center gap-2 bg-white px-4 py-2 rounded-3xl"
+        className={`flex items-center gap-2 border border-transparent bg-white px-4 py-[6px] rounded-3xl ${
+          scrolled || location.pathname !== "/" ? "border-zinc-200" : ""
+        }`}
       >
         <IoMenuOutline className="" />
         <span className="text-sm">Danh mục</span>
       </button>
-      <div className="text-2xl font-bold">
+      <Link to={"/"} className="text-2xl font-bold">
         <span className="text-[#2a2a86]">F</span>
         <span className="text-[#fcaf17]">Store</span>
-      </div>
+      </Link>
       <div className="flex items-center gap-2">
         <div
           className={`flex items-center gap-2 bg-white px-5 py-2 w-52 rounded-2xl border border-transparent hover:border-zinc-300 duration-300 transition-all ease-linear ${
-            scrolled ? "border-zinc-300" : ""
+            scrolled || location.pathname !== "/" ? "border-zinc-300" : ""
           }`}
         >
           <CiSearch className="" />

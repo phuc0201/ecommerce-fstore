@@ -2,7 +2,7 @@ export interface Category {
   id: number;
   name: string;
   urlHandle: string;
-  parent: {
+  parent?: {
     id: number;
     name: string;
     urlHandle: string;
