@@ -9,4 +9,6 @@ const PATH = {
   PROFILE: "/profile",
 };
 
+export const REFRESH_TOKEN_URL = "/api/v1/auth/refresh-tokens";
+
 export default PATH;

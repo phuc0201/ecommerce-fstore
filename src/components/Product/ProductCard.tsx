@@ -14,8 +14,9 @@ const ProductCard: React.FC<{
   };
   return (
     <div className="grid gap-2">
-      <Link to={product.urlHandle}>
+      <Link to={"/product/" + product.urlHandle}>
         <img
+          loading="lazy"
           src={product.photos[0].url || ""}
           alt=""
           className={`${displayProductInfo ? "rounded-2xl" : ""}`}
@@ -46,6 +47,7 @@ const ProductCard: React.FC<{
           <div className="flex items-center gap-1">
             {product.colors.map((item) => (
               <button
+                key={item.id}
                 style={{ backgroundColor: getColor(item.id) }}
                 className={`h-6 w-6 border-2 border-zinc-300 rounded-full`}
               ></button>
