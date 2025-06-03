@@ -58,4 +58,5 @@ export interface Product {
   photos: Photo[];
   variants: Variant[];
   colors: Color[];
+  sizes: Size[];
 }

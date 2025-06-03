@@ -12,4 +12,8 @@ export const ProductService = {
       .get<IPagedResults<Product>>("/product", { params })
       .then((res) => res.data);
   },
+
+  getProductDetails: (productId: number): Promise<Product> => {
+    return client.get<Product>("/product/" + productId).then((res) => res.data);
+  },
 };

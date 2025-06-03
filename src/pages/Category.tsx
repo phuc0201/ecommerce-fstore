@@ -86,7 +86,7 @@ const Category: React.FC = () => {
         </div>
       </div>
 
-      <div className="min-h-[500px] sectionContainer">
+      <div className="min-h-[800px] sectionContainer">
         <div className="py-5">
           {(isLoading || isFetchingNextPage) && (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

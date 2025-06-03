@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { ProductService } from "../../services/product.service";
 
 interface UseInfiniteProductsParams {
@@ -26,5 +26,13 @@ export function useInfiniteProducts({
       return nextPage < lastPage.totalPages ? nextPage : undefined;
     },
     initialPageParam: page,
+  });
+}
+
+export function useGetProductDetails(productId: number) {
+  return useQuery({
+    queryKey: ["GET_PRODUCT_DETAILS", productId],
+    queryFn: () =>
+      ProductService.getProductDetails(productId).then((res) => res),
   });
 }

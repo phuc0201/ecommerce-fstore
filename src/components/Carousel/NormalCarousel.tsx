@@ -72,9 +72,7 @@ const NormalCarousel: React.FC<CarouselProps> = ({ slides }) => {
             isAnimating
               ? `transition-transform ease-in-out ${"duration-1000"}`
               : ""
-          }
-          ${"translate-x-" + currentSlide * 100}
-          `}
+          }`}
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
           {extendedSlides.map((slide, index) => (

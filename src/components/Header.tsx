@@ -61,14 +61,14 @@ const Header: React.FC = () => {
             className="w-full outline-none focus:ring-0 focus:border-0 text-xs placeholder:text-xs"
           />
         </div>
-        <HiOutlineShoppingBag className="text-2xl" />
-
+        <HiOutlineShoppingBag id="header_cart" className="text-2xl" />
+        {/* 
         <Link
           to={"/login"}
           className="bg-[#fcaf17] text-zinc-100 font-medium p-2 px-3 text-xs rounded-lg"
         >
           Login
-        </Link>
+        </Link> */}
       </div>
     </header>
   );
