@@ -61,7 +61,7 @@ const Header: React.FC = () => {
             className="w-full outline-none focus:ring-0 focus:border-0 text-xs placeholder:text-xs"
           />
         </div>
-        <HiOutlineShoppingBag id="header_cart" className="text-2xl" />
+        <HiOutlineShoppingBag id="header_cart" className="text-2xl relative" />
         {/* 
         <Link
           to={"/login"}

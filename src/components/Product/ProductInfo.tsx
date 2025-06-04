@@ -16,6 +16,7 @@ type ProductInfoProps = {
   sizes: { id: number; name: string }[];
   description: string;
   onColorChange: (colorId: number) => void;
+  onAddToCart: (colorId: number) => void;
 };
 
 const ProductInfo: React.FC<ProductInfoProps> = ({
@@ -25,6 +26,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   sizes,
   description,
   onColorChange,
+  onAddToCart,
 }) => {
   const [selectedColor, setSelectedColor] = useState<Color>({
     id: -1,
@@ -124,7 +126,10 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           </button>
         </div>
 
-        <button className="flex items-center justify-center gap-4 bg-color-brand-surface hover:bg-yellow-500 font-medium px-6 py-3 rounded-full transition flex-1 text-sm">
+        <button
+          onClick={() => onAddToCart(selectedColor.id)}
+          className="flex items-center justify-center gap-4 bg-color-brand-surface hover:bg-yellow-500 font-medium px-6 py-3 rounded-full transition flex-1 text-sm"
+        >
           <span>Thêm vào giỏ</span>
           <IoBagOutline className="text-xl" />
         </button>

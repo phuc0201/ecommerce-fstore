@@ -11,11 +11,13 @@ const Product: React.FC = () => {
   const { slug = "" } = useParams<{ slug?: string }>();
   const productId = slug.split("-").pop() || "0";
   const { data } = useGetProductDetails(parseInt(productId));
-
+  const [onAddToCart, setOnAddToCart] = useState<boolean>(false);
+  const [photoAnimate, setPhotoAnimate] = useState<string>("");
   const [crrPhotoId, setCrrPhotoId] = useState<number>(1);
-
   const mainSlider = useRef<Slider | null>(null);
   const thumbSlider = useRef<Slider | null>(null);
+  const photoAnimateEl = useRef<HTMLDivElement | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     if (data?.photos && data.photos.length > 0) {
@@ -50,6 +52,104 @@ const Product: React.FC = () => {
       mainSlider.current?.slickGoTo(targetIndex);
       thumbSlider.current?.slickGoTo(targetIndex);
     }
+  };
+  //   if (!data) return;
+  //   if (isAnimating) return;
+  //   setIsAnimating(true);
+
+  //   const photoIdx = data.photos.findIndex((i) => i.colorId === colorId);
+  //   setPhotoAnimate(data.photos[photoIdx].url);
+  //   setOnAddToCart(true);
+
+  //   const fromEl = photoAnimateEl.current?.getBoundingClientRect();
+  //   const toEl = document
+  //     .getElementById("header_cart")
+  //     ?.getBoundingClientRect();
+
+  //   requestAnimationFrame(() => {
+  //     if (!photoAnimateEl.current) return;
+  //     photoAnimateEl.current.style.transitionProperty = "all";
+  //     photoAnimateEl.current.style.transform = "scale(1)";
+  //     photoAnimateEl.current.style.opacity = "0";
+  //     photoAnimateEl.current.style.transitionDuration = "0.5s";
+
+  //     requestAnimationFrame(() => {
+  //       if (!photoAnimateEl.current) return;
+  //       photoAnimateEl.current.style.transform = "scale(0.5)";
+  //       photoAnimateEl.current.style.opacity = "1";
+
+  //       setTimeout(() => {
+  //         if (fromEl && toEl && photoAnimateEl.current) {
+  //           photoAnimateEl.current.style.transformOrigin = "top right";
+  //           const deltaX = toEl.left - fromEl.right;
+  //           const deltaY = toEl.bottom - fromEl.top;
+  //           photoAnimateEl.current.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0.1)`;
+  //           photoAnimateEl.current.style.transitionProperty = "all";
+  //           photoAnimateEl.current.style.transitionDuration = "0.8s";
+
+  //           setTimeout(() => {
+  //             setOnAddToCart(false);
+  //             if (!photoAnimateEl.current) return;
+  //             photoAnimateEl.current.style.transitionProperty = "none";
+  //             photoAnimateEl.current.style.transform = "scale(1)";
+  //             photoAnimateEl.current.style.transformOrigin = "center center";
+  //             photoAnimateEl.current.style.transitionDuration = "0.5s";
+  //             photoAnimateEl.current.style.opacity = "0";
+  //             setIsAnimating(false);
+  //           }, 850);
+  //         }
+  //       }, 500);
+  //     });
+  //   });
+  // };
+
+  const handleAddToCart = (colorId: number) => {
+    if (!data || isAnimating) return;
+    setIsAnimating(true);
+
+    const photoIdx = data.photos.findIndex((i) => i.colorId === colorId);
+    const photoUrl = data.photos[photoIdx]?.url;
+    if (!photoUrl) return;
+
+    setPhotoAnimate(photoUrl);
+    setOnAddToCart(true);
+
+    const el = photoAnimateEl.current;
+    const fromRect = el?.getBoundingClientRect();
+    const toRect = document
+      .getElementById("header_cart")
+      ?.getBoundingClientRect();
+
+    if (!el || !fromRect || !toRect) return;
+
+    el.style.transition = "none";
+    el.style.opacity = "0";
+    el.style.transform = "scale(1)";
+    el.style.transformOrigin = "center center";
+
+    requestAnimationFrame(() => {
+      el.style.transition = "all 0.5s ease";
+      el.style.opacity = "1";
+      el.style.transform = "scale(0.5)";
+
+      setTimeout(() => {
+        const deltaX = toRect.left - fromRect.right;
+        const deltaY = toRect.bottom - fromRect.top;
+
+        el.style.transition = "all 0.8s ease";
+        el.style.transformOrigin = "top right";
+        el.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0.1)`;
+
+        setTimeout(() => {
+          setOnAddToCart(false);
+          el.style.transition = "none";
+          el.style.opacity = "0";
+          el.style.transform = "scale(1)";
+          el.style.transformOrigin = "center center";
+          setIsAnimating(false);
+        }, 800);
+      }, 500);
+    });
   };
 
   const mainSettings = {
@@ -115,7 +215,27 @@ const Product: React.FC = () => {
 
             {/* Main Slider */}
             <div className="relative w-full">
-              <div className="w-[528px] relative overflow-hidden">
+              <div className="w-[528px] h-[704px] relative">
+                <div className="">
+                  <div
+                    className={`absolute inset-0 z-10 bg-black/30 transition-all durantion-1000 ${
+                      onAddToCart ? "opacity-100" : "opacity-0"
+                    }`}
+                  ></div>
+                  <div
+                    ref={photoAnimateEl}
+                    className={`absolute inset-0 w-full h-full bg-gray-100 z-20 rounded-2xl ${
+                      onAddToCart ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    <img
+                      src={photoAnimate || "photo"}
+                      alt="photo"
+                      className="rounded-2xl w-full h-full object-cover transition-all duration-500"
+                    />
+                  </div>
+                </div>
+
                 <div className="absolute bottom-5 right-5 z-10 flex items-center gap-3">
                   <button
                     onClick={prevPhoto}
@@ -154,6 +274,7 @@ const Product: React.FC = () => {
               sizes={data?.sizes ?? []}
               description={data?.metaDesc ?? ""}
               onColorChange={handleColorChange}
+              onAddToCart={handleAddToCart}
             />
           </div>
         </div>
