@@ -126,29 +126,36 @@ const Product: React.FC = () => {
     el.style.opacity = "0";
     el.style.transform = "scale(1)";
     el.style.transformOrigin = "center center";
+    el.style.zIndex = "-1";
+    el.style.display = "none";
 
     requestAnimationFrame(() => {
-      el.style.transition = "all 0.5s ease";
-      el.style.opacity = "1";
-      el.style.transform = "scale(0.5)";
+      el.style.display = "block";
 
-      setTimeout(() => {
-        const deltaX = toRect.left - fromRect.right;
-        const deltaY = toRect.bottom - fromRect.top;
-
-        el.style.transition = "all 0.8s ease";
-        el.style.transformOrigin = "top right";
-        el.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0.1)`;
+      requestAnimationFrame(() => {
+        el.style.transition = "all 0.5s ease";
+        el.style.opacity = "1";
+        el.style.transform = "scale(0.5)";
+        el.style.zIndex = "10";
 
         setTimeout(() => {
-          setOnAddToCart(false);
-          el.style.transition = "none";
-          el.style.opacity = "0";
-          el.style.transform = "scale(1)";
-          el.style.transformOrigin = "center center";
-          setIsAnimating(false);
-        }, 800);
-      }, 500);
+          const deltaX = toRect.left - fromRect.right;
+          const deltaY = toRect.bottom - fromRect.top;
+
+          el.style.transition = "all 0.8s ease";
+          el.style.transformOrigin = "top right";
+          el.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0.1)`;
+
+          setTimeout(() => {
+            setOnAddToCart(false);
+            el.style.transition = "none";
+            el.style.opacity = "0";
+            el.style.transform = "scale(1)";
+            el.style.transformOrigin = "center center";
+            setIsAnimating(false);
+          }, 800);
+        }, 500);
+      });
     });
   };
 
@@ -174,7 +181,7 @@ const Product: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[800px]">
+    <div className="lg:min-h-[900px]">
       <div className="border-0 border-b-[1px] border-zinc-200 py-4">
         <div className="max-w-[1280px] mx-auto">
           <div className="text-sm">
@@ -218,7 +225,7 @@ const Product: React.FC = () => {
               <div className="w-[528px] h-[704px] relative">
                 <div className="">
                   <div
-                    className={`absolute inset-0 z-10 bg-black/30 transition-all durantion-1000 ${
+                    className={`absolute inset-0 bg-black/30 transition-all rounded-2xl durantion-1000 ${
                       onAddToCart ? "opacity-100" : "opacity-0"
                     }`}
                   ></div>
