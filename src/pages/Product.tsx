@@ -6,6 +6,10 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ProductInfo from "../components/Product/ProductInfo";
+import type { Size } from "../types/product.type";
+import type { CartItem } from "../types/cart.type";
+import { CartService } from "../services/cart.service";
+import { useCart } from "../hooks/useCart";
 
 const Product: React.FC = () => {
   const { slug = "" } = useParams<{ slug?: string }>();
@@ -14,10 +18,16 @@ const Product: React.FC = () => {
   const [onAddToCart, setOnAddToCart] = useState<boolean>(false);
   const [photoAnimate, setPhotoAnimate] = useState<string>("");
   const [crrPhotoId, setCrrPhotoId] = useState<number>(1);
+  const [selectedSize, setSelectedSize] = useState<Size>({
+    id: -1,
+    name: "",
+  });
+  const [quantity, setQuantity] = useState<number>(1);
   const mainSlider = useRef<Slider | null>(null);
   const thumbSlider = useRef<Slider | null>(null);
   const photoAnimateEl = useRef<HTMLDivElement | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const { setCart } = useCart();
 
   useEffect(() => {
     if (data?.photos && data.photos.length > 0) {
@@ -53,57 +63,8 @@ const Product: React.FC = () => {
       thumbSlider.current?.slickGoTo(targetIndex);
     }
   };
-  //   if (!data) return;
-  //   if (isAnimating) return;
-  //   setIsAnimating(true);
 
-  //   const photoIdx = data.photos.findIndex((i) => i.colorId === colorId);
-  //   setPhotoAnimate(data.photos[photoIdx].url);
-  //   setOnAddToCart(true);
-
-  //   const fromEl = photoAnimateEl.current?.getBoundingClientRect();
-  //   const toEl = document
-  //     .getElementById("header_cart")
-  //     ?.getBoundingClientRect();
-
-  //   requestAnimationFrame(() => {
-  //     if (!photoAnimateEl.current) return;
-  //     photoAnimateEl.current.style.transitionProperty = "all";
-  //     photoAnimateEl.current.style.transform = "scale(1)";
-  //     photoAnimateEl.current.style.opacity = "0";
-  //     photoAnimateEl.current.style.transitionDuration = "0.5s";
-
-  //     requestAnimationFrame(() => {
-  //       if (!photoAnimateEl.current) return;
-  //       photoAnimateEl.current.style.transform = "scale(0.5)";
-  //       photoAnimateEl.current.style.opacity = "1";
-
-  //       setTimeout(() => {
-  //         if (fromEl && toEl && photoAnimateEl.current) {
-  //           photoAnimateEl.current.style.transformOrigin = "top right";
-  //           const deltaX = toEl.left - fromEl.right;
-  //           const deltaY = toEl.bottom - fromEl.top;
-  //           photoAnimateEl.current.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0.1)`;
-  //           photoAnimateEl.current.style.transitionProperty = "all";
-  //           photoAnimateEl.current.style.transitionDuration = "0.8s";
-
-  //           setTimeout(() => {
-  //             setOnAddToCart(false);
-  //             if (!photoAnimateEl.current) return;
-  //             photoAnimateEl.current.style.transitionProperty = "none";
-  //             photoAnimateEl.current.style.transform = "scale(1)";
-  //             photoAnimateEl.current.style.transformOrigin = "center center";
-  //             photoAnimateEl.current.style.transitionDuration = "0.5s";
-  //             photoAnimateEl.current.style.opacity = "0";
-  //             setIsAnimating(false);
-  //           }, 850);
-  //         }
-  //       }, 500);
-  //     });
-  //   });
-  // };
-
-  const handleAddToCart = (colorId: number) => {
+  const handleAddToCartAnimation = (colorId: number) => {
     if (!data || isAnimating) return;
     setIsAnimating(true);
 
@@ -157,6 +118,34 @@ const Product: React.FC = () => {
         }, 500);
       });
     });
+  };
+
+  const handleAddToCart = (colorId: number) => {
+    handleAddToCartAnimation(colorId);
+    if (data) {
+      const variant = data.variants.find(
+        (v) => v.colorId === colorId && v.sizeId === selectedSize.id
+      );
+
+      const cartItem: CartItem = {
+        productId: parseInt(productId),
+        quantity: quantity,
+        variantId: variant?.id,
+        productName: data.name,
+        productImage:
+          data.photos.find((photo) => photo.colorId === colorId)?.url || "",
+        size: selectedSize,
+        color: data.colors.find((c) => c.id === colorId) || {
+          id: -1,
+          name: "",
+        },
+        originalPrice: parseInt(data.originalPrice || "0"),
+        salePrice: parseInt(data.salePrice || "0") || null,
+      };
+
+      CartService.addToCart(cartItem);
+      setCart(CartService.getCart());
+    }
   };
 
   const mainSettings = {
@@ -282,6 +271,10 @@ const Product: React.FC = () => {
               description={data?.metaDesc ?? ""}
               onColorChange={handleColorChange}
               onAddToCart={handleAddToCart}
+              setSelectedSize={setSelectedSize}
+              selectedSize={selectedSize}
+              quantity={quantity}
+              setQuantity={setQuantity}
             />
           </div>
         </div>

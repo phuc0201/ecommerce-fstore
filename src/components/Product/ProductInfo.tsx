@@ -15,8 +15,12 @@ type ProductInfoProps = {
   colors: { id: number; name: string }[];
   sizes: { id: number; name: string }[];
   description: string;
+  selectedSize: Size;
+  quantity: number;
+  setQuantity: (quantity: number) => void;
   onColorChange: (colorId: number) => void;
   onAddToCart: (colorId: number) => void;
+  setSelectedSize: (size: Size) => void;
 };
 
 const ProductInfo: React.FC<ProductInfoProps> = ({
@@ -25,20 +29,18 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   colors,
   sizes,
   description,
+  selectedSize,
+  quantity = 1,
+  setQuantity,
   onColorChange,
   onAddToCart,
+  setSelectedSize,
 }) => {
   const [selectedColor, setSelectedColor] = useState<Color>({
     id: -1,
     name: "",
     hex: "",
   });
-
-  const [selectedSize, setSelectedSize] = useState<Size>({
-    id: -1,
-    name: "",
-  });
-  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     if (colors.length > 0) {
@@ -113,14 +115,14 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         <div className="flex items-center border border-zinc-300 rounded-full overflow-hidden w-40">
           <button
             className="w-10 h-10 text-xl flex pl-2"
-            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+            onClick={() => setQuantity(Math.max(1, quantity - 1))}
           >
             <FiMinus className="m-auto text-gray-600" />
           </button>
           <div className="w-10 text-center flex-1">{quantity}</div>
           <button
             className="w-10 h-10 text-xl flex pr-2"
-            onClick={() => setQuantity((q) => q + 1)}
+            onClick={() => setQuantity(quantity + 1)}
           >
             <FiPlus className="m-auto text-gray-600" />
           </button>

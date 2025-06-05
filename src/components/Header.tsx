@@ -4,11 +4,13 @@ import { CiSearch } from "react-icons/ci";
 import { useEffect, useState } from "react";
 import MegaMenu from "./MegaMenu";
 import { Link, useLocation } from "react-router";
+import { useCart } from "../hooks/useCart";
 
 const Header: React.FC = () => {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
+  const { cart } = useCart();
 
   const handleMenuClick = () => {
     setIsMegaMenuOpen((prev) => !prev);
@@ -21,6 +23,9 @@ const Header: React.FC = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const getTotalQuantity = (): number =>
+    cart?.itemDTO?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
   return (
     <header
@@ -61,14 +66,21 @@ const Header: React.FC = () => {
             className="w-full outline-none focus:ring-0 focus:border-0 text-xs placeholder:text-xs"
           />
         </div>
-        <HiOutlineShoppingBag id="header_cart" className="text-2xl relative" />
-        {/* 
-        <Link
-          to={"/login"}
-          className="bg-[#fcaf17] text-zinc-100 font-medium p-2 px-3 text-xs rounded-lg"
-        >
-          Login
-        </Link> */}
+        <div className={`relative`}>
+          <div
+            className={`absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex z-10 ${
+              cart ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <div className="m-auto">
+              {getTotalQuantity() < 9 ? getTotalQuantity() : "9+"}
+            </div>
+          </div>
+          <HiOutlineShoppingBag
+            id="header_cart"
+            className="text-2xl relative"
+          />
+        </div>
       </div>
     </header>
   );

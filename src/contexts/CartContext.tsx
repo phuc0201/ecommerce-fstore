@@ -1,0 +1,21 @@
+import { createContext, useState } from "react";
+import type { Cart } from "../types/cart.type";
+
+interface CartContextType {
+  cart: Cart | null;
+  setCart: React.Dispatch<React.SetStateAction<Cart | null>>;
+}
+
+export const CartContext = createContext<CartContextType | undefined>(
+  undefined
+);
+
+export const CartProvider = ({ children }: { children: React.ReactNode }) => {
+  const [cart, setCart] = useState<Cart | null>(null);
+
+  return (
+    <CartContext.Provider value={{ cart, setCart }}>
+      {children}
+    </CartContext.Provider>
+  );
+};
