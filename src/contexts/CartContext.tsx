@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import type { Cart } from "../types/cart.type";
+import { CartService } from "../services/cart.service";
 
 interface CartContextType {
   cart: Cart | null;
@@ -11,7 +12,7 @@ export const CartContext = createContext<CartContextType | undefined>(
 );
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cart, setCart] = useState<Cart | null>(null);
+  const [cart, setCart] = useState<Cart | null>(CartService.getCart());
 
   return (
     <CartContext.Provider value={{ cart, setCart }}>

@@ -1,9 +1,8 @@
 import type { Color, Size } from "./product.type";
-
 export class CartItem {
   productId: number;
   quantity: number;
-  variantId?: number;
+  variantId: number;
   productName: string;
   productImage: string;
   size: Size;

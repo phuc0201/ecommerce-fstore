@@ -56,14 +56,44 @@ export const CartService = {
     }
   },
 
-  // removeFromCart: (productId: string) => {
-  //   // Logic to remove the item from the cart
-  // },
+  removeFromCart: (productId: number, variantId: number) => {
+    const cart = CartService.getCart();
+    if (cart) {
+      const existingItemIndex = cart.items.findIndex(
+        (item) => item.productId === productId && item.variantId === variantId
+      );
+      if (existingItemIndex !== -1) {
+        cart.itemDTO.splice(existingItemIndex, 1);
+        cart.items.splice(existingItemIndex, 1);
+        cart.totalPrice = CartService.calculateTotalPrice(cart.items);
+        localStorage.setItem(SystemConstants.CART, JSON.stringify(cart));
+      }
+    }
+  },
 
   calculateTotalPrice: (cartItems: CartItem[]): number => {
     return cartItems.reduce((total, item) => {
       const price = item.salePrice || item.originalPrice;
       return total + price * item.quantity;
     }, 0);
+  },
+
+  updateCartQuantity: (
+    productId: number,
+    variantId: number,
+    quantity: number
+  ) => {
+    const cart = CartService.getCart();
+    if (cart) {
+      const existingItemIndex = cart.items.findIndex(
+        (item) => item.productId === productId && item.variantId === variantId
+      );
+      if (existingItemIndex !== -1) {
+        cart.itemDTO[existingItemIndex].quantity = quantity;
+        cart.items[existingItemIndex].quantity = quantity;
+        cart.totalPrice = CartService.calculateTotalPrice(cart.items);
+        localStorage.setItem(SystemConstants.CART, JSON.stringify(cart));
+      }
+    }
   },
 };

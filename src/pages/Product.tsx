@@ -130,7 +130,7 @@ const Product: React.FC = () => {
       const cartItem: CartItem = {
         productId: parseInt(productId),
         quantity: quantity,
-        variantId: variant?.id,
+        variantId: variant?.id ?? -1,
         productName: data.name,
         productImage:
           data.photos.find((photo) => photo.colorId === colorId)?.url || "",
@@ -174,9 +174,12 @@ const Product: React.FC = () => {
       <div className="border-0 border-b-[1px] border-zinc-200 py-4">
         <div className="max-w-[1280px] mx-auto">
           <div className="text-sm">
-            <span className="text-zinc-500">
+            <span className="text-zinc-500 mr-1">
               <Link to={"/"}>Trang chủ</Link> /
-            </span>{" "}
+            </span>
+            <span className="text-zinc-500 mr-1">
+              <Link to={"/category"}>Danh mục</Link> /
+            </span>
             {slug}
           </div>
         </div>
@@ -220,7 +223,7 @@ const Product: React.FC = () => {
                   ></div>
                   <div
                     ref={photoAnimateEl}
-                    className={`absolute inset-0 w-full h-full bg-gray-100 z-20 rounded-2xl ${
+                    className={`absolute inset-0 w-full h-full bg-gray-100 rounded-2xl ${
                       onAddToCart ? "opacity-100" : "opacity-0"
                     }`}
                   >
