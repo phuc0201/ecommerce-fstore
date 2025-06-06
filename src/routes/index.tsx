@@ -4,6 +4,7 @@ import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
 import Category from "../pages/Category";
 import Product from "../pages/Product";
+import Checkout from "../pages/Checkout";
 
 const customerRoutes = {
   path: "/",
@@ -12,6 +13,7 @@ const customerRoutes = {
     { path: PATH.HOME, element: <Home /> },
     { path: PATH.CATEGORY, element: <Category /> },
     { path: PATH.PRODUCT_DETAIL, element: <Product /> },
+    { path: PATH.CHECKOUT, element: <Checkout /> },
   ],
 };
 

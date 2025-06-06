@@ -78,6 +78,19 @@ export const CartService = {
     }, 0);
   },
 
+  calculateSubtotal: (cartItems: CartItem[]): number => {
+    return cartItems.reduce((total, item) => {
+      return total + item.originalPrice * item.quantity;
+    }, 0);
+  },
+
+  calculateDiscount: (cartItems: CartItem[]): number => {
+    return cartItems.reduce((total, item) => {
+      const discount = item.salePrice ? item.originalPrice - item.salePrice : 0;
+      return total + discount * item.quantity;
+    }, 0);
+  },
+
   updateCartQuantity: (
     productId: number,
     variantId: number,

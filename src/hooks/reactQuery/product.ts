@@ -17,7 +17,6 @@ export function useInfiniteProducts({
     queryFn: ({ pageParam = 0 }) =>
       ProductService.getProducts({ page: pageParam, limit, category }).then(
         (res) => {
-          console.log(res);
           return res;
         }
       ),

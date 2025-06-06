@@ -33,7 +33,7 @@ const CartItemCard: React.FC<CartItem> = (item) => {
     }
   };
   return (
-    <div className="flex justify-between py-4 border-b">
+    <div className="flex justify-between py-4">
       <div className="flex items-center">
         <img
           src={item.productImage}

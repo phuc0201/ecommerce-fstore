@@ -62,22 +62,25 @@ export class CartItemDTO {
 }
 
 export class OrderDTO {
-  fullName: string;
+  name: string;
   address: string;
   phone: string;
+  email: string;
   paymentMethod: string;
   cart: CartItemDTO[];
 
   constructor(
-    fullName: string = "",
+    name: string = "",
     address: string = "",
     phone: string = "",
+    email: string = "",
     paymentMethod: "COD" | "BANKING" = "COD",
     cart: CartItemDTO[] = []
   ) {
-    this.fullName = fullName;
+    this.name = name;
     this.address = address;
     this.phone = phone;
+    this.email = email;
     this.paymentMethod = paymentMethod;
     this.cart = cart;
   }

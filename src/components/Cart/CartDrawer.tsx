@@ -2,6 +2,8 @@ import React from "react";
 import { IoClose } from "react-icons/io5";
 import { useCart } from "../../hooks/useCart";
 import CartItemCard from "./CartItemCard";
+import { useNavigate } from "react-router-dom";
+import PATH from "../../constants/routePaths";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -10,6 +12,14 @@ interface CartDrawerProps {
 
 const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   const { cart } = useCart();
+  const navigate = useNavigate();
+  const navigateCheckout = () => {
+    onClose();
+    setTimeout(() => {
+      navigate(PATH.CHECKOUT);
+      window.scrollTo(0, 0);
+    }, 300);
+  };
 
   return (
     <>
@@ -41,12 +51,14 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
               {cart?.items.length === 0 ? (
                 <div className="text-center text-gray-500">Giỏ hàng trống</div>
               ) : (
-                cart?.items.map((item) => (
-                  <div
-                    key={`${item.productId}-${item.variantId}`}
-                    className="mb-4"
-                  >
+                cart?.items.map((item, index) => (
+                  <div key={`${item.productId}-${item.variantId}`} className="">
                     <CartItemCard {...item} />
+                    <div
+                      className={`h-[1px] w-full bg-zinc-200 ${
+                        index === cart.items.length - 1 ? "hidden" : ""
+                      }`}
+                    ></div>
                   </div>
                 ))
               )}
@@ -65,7 +77,10 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                 })}
               </span>
             </div>
-            <button className="w-full bg-color-brand-surface text-black py-2 rounded-lg active:scale-95 transition-colors">
+            <button
+              onClick={navigateCheckout}
+              className="w-full bg-color-brand-surface text-black py-2 rounded-lg active:scale-95 transition-colors"
+            >
               Thanh toán
             </button>
           </div>

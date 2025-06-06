@@ -13,7 +13,7 @@ const Category: React.FC = () => {
   const [isGalleryMode, setIsGalleryMode] = useState<boolean>(false);
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
     useInfiniteProducts({
-      limit: 12,
+      limit: 24,
     });
 
   const { ref, inView } = useInView({

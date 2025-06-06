@@ -14,7 +14,10 @@ const ProductCard: React.FC<{
   };
   return (
     <div className="grid gap-2">
-      <Link to={"/product/" + product.urlHandle}>
+      <Link
+        to={"/product/" + product.urlHandle}
+        className={`${displayProductInfo ? "min-h-[383px]" : "min-h-[259px]"}`}
+      >
         <img
           loading="lazy"
           src={product.photos[0].url || ""}

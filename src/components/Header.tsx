@@ -75,7 +75,7 @@ const Header: React.FC = () => {
           >
             <div
               className={`absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex z-10 ${
-                cart ? "opacity-100" : "opacity-0"
+                cart && cart.itemDTO.length > 0 ? "opacity-100" : "opacity-0"
               }`}
             >
               <div className="m-auto">
