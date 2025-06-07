@@ -129,7 +129,10 @@ const MegaMenu: React.FC<MegaMenuProps> = (props) => {
                           <div
                             className={`${isOpen ? "block" : "hidden"} px-5`}
                           >
-                            <Link to={""} className="py-2 text-sm block">
+                            <Link
+                              to={PATH.CATEGORY + "?id=" + item.id}
+                              className="py-2 text-sm block"
+                            >
                               Tất cả
                             </Link>
                           </div>
