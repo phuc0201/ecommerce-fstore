@@ -1,5 +1,5 @@
 import type { IPagedResults } from "../types/pagnigate";
-import type { Product } from "../types/product.type";
+import type { Product } from "../types/product";
 
 export const productsDummyData: IPagedResults<Product> = {
   data: [],

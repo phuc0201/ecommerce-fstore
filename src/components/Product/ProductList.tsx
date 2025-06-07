@@ -1,6 +1,6 @@
 import type React from "react";
 import ProductCard from "./ProductCard";
-import type { Product } from "../../types/product.type";
+import type { Product } from "../../types/product";
 import type { IPagedResults } from "../../types/pagnigate";
 
 const ProductList: React.FC<{

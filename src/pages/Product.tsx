@@ -6,8 +6,8 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ProductInfo from "../components/Product/ProductInfo";
-import type { Size } from "../types/product.type";
-import type { CartItem } from "../types/cart.type";
+import type { Size } from "../types/product";
+import type { CartItem } from "../types/cart";
 import { CartService } from "../services/cart.service";
 import { useCart } from "../hooks/useCart";
 

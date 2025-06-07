@@ -1,25 +1,28 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { ProductService } from "../../services/product.service";
-
-interface UseInfiniteProductsParams {
-  page?: number;
-  limit?: number;
-  category?: number;
-}
+import type { Filter } from "../../types/category";
 
 export function useInfiniteProducts({
   page = 0,
-  limit = 12,
+  limit = 18,
   category,
-}: UseInfiniteProductsParams) {
+  color,
+  size,
+  orderType,
+}: Filter) {
   return useInfiniteQuery({
-    queryKey: ["GET_PRODUCTS", page, limit, category],
+    queryKey: ["GET_PRODUCTS", page, limit, category, color, size, orderType],
     queryFn: ({ pageParam = 0 }) =>
-      ProductService.getProducts({ page: pageParam, limit, category }).then(
-        (res) => {
-          return res;
-        }
-      ),
+      ProductService.getProducts({
+        page: pageParam,
+        limit,
+        category,
+        color,
+        size,
+        orderType,
+      }).then((res) => {
+        return res;
+      }),
     getNextPageParam: (lastPage) => {
       const nextPage = lastPage.page + 1;
       return nextPage < lastPage.totalPages ? nextPage : undefined;

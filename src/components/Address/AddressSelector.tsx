@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import type { Province, District, Ward } from "../../types/address.type";
-import { AddressLevel } from "../../types/address.type";
+import type { Province, District, Ward } from "../../types/address";
+import { AddressLevel } from "../../types/address";
 import { CiSearch } from "react-icons/ci";
 import AddressService from "../../services/address.service";
 

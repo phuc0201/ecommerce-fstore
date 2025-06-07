@@ -1,5 +1,5 @@
 import type React from "react";
-import type { Product } from "../../types/product.type";
+import type { Product } from "../../types/product";
 import { colorDummyData } from "../../dummy-data/color.data";
 import { Link } from "react-router-dom";
 

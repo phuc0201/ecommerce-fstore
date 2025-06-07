@@ -1,5 +1,5 @@
 import { SystemConstants } from "../constants/SystemContants";
-import { Cart, CartItem, CartItemDTO } from "../types/cart.type";
+import { Cart, CartItem, CartItemDTO } from "../types/cart";
 
 export const CartService = {
   getCart: (): Cart | null => {

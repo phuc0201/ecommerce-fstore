@@ -1,5 +1,5 @@
 import type { IPagedResults } from "../types/pagnigate";
-import type { Product } from "../types/product.type";
+import type { Product } from "../types/product";
 import client from "./client";
 
 export const ProductService = {
@@ -7,6 +7,9 @@ export const ProductService = {
     page?: number;
     limit?: number;
     category?: number;
+    color?: number;
+    size?: number;
+    orderType?: number;
   }): Promise<IPagedResults<Product>> => {
     return client
       .get<IPagedResults<Product>>("/product", { params })

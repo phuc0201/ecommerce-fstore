@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { OrderDTO } from "../../types/cart.type";
+import { OrderDTO } from "../../types/cart";
 import { OrderService } from "../../services/order.service";
 
 export function useCreateOrder(order: OrderDTO) {

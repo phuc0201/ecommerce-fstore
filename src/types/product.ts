@@ -1,4 +1,4 @@
-import type { Category } from "./category.type";
+import type { Category } from "./category";
 
 export interface Color {
   id: number;

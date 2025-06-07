@@ -1,5 +1,5 @@
 import { SystemConstants } from "../constants/SystemContants";
-import { Address } from "../types/address.type";
+import { Address } from "../types/address";
 import { v4 as uuidv4 } from "uuid";
 const AddressService = {
   getAddress: async () => {

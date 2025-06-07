@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { GoChevronLeft } from "react-icons/go";
 import { GoChevronRight } from "react-icons/go";
-import type { CarouselProps } from "../../types/carousel.type";
+import type { CarouselProps } from "../../types/carousel";
 
 const NormalCarousel: React.FC<CarouselProps> = ({ slides }) => {
   const TRANSITION_DURATION = 1000;

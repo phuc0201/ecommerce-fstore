@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import AddressSelector from "./AddressSelector";
 import { LiaAngleLeftSolid } from "react-icons/lia";
 import AddressService from "../../services/address.service";
-import { Address } from "../../types/address.type";
+import { Address } from "../../types/address";
 
 export default function FormAddress(props: {
   setIsOpenForm: (open: boolean) => void;

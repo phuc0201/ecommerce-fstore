@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Address } from "../../types/address.type";
+import { Address } from "../../types/address";
 import FormAddress from "./FormAddress";
 import AddressItem from "./AddressItem";
 import { HiMiniXMark } from "react-icons/hi2";

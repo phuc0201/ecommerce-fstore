@@ -1,5 +1,5 @@
 import React from "react";
-import type { CarouselProps } from "../../types/carousel.type";
+import type { CarouselProps } from "../../types/carousel";
 import CoverflowCarousel from "./CoverflowCarousel";
 import NormalCarousel from "./NormalCarousel";
 

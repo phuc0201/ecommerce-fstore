@@ -1,4 +1,4 @@
-import type { Color, Size } from "./product.type";
+import type { Color, Size } from "./product";
 export class CartItem {
   productId: number;
   quantity: number;

@@ -1,4 +1,4 @@
-import type { OrderDTO } from "../types/cart.type";
+import type { OrderDTO } from "../types/cart";
 import client from "./client";
 
 export const OrderService = {

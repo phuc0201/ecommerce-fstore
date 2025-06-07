@@ -1,5 +1,5 @@
 import { CiTrash } from "react-icons/ci";
-import type { CartItem } from "../../types/cart.type";
+import type { CartItem } from "../../types/cart";
 import { CartService } from "../../services/cart.service";
 import { useCart } from "../../hooks/useCart";
 import { FiMinus, FiPlus } from "react-icons/fi";

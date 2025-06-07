@@ -11,7 +11,7 @@ import CartItemCard from "../components/Cart/CartItemCard";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import PATH from "../constants/routePaths";
 import AddressDrawer from "../components/Address/AddressDrawer";
-import { OrderDTO } from "../types/cart.type";
+import { OrderDTO } from "../types/cart";
 import AddressService from "../services/address.service";
 import { OrderService } from "../services/order.service";
 

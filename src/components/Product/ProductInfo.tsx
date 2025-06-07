@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { colorDummyData } from "../../dummy-data/color.data";
-import type { Color, Size } from "../../types/product.type";
+import type { Color, Size } from "../../types/product";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import { IoBagOutline } from "react-icons/io5";
 import { BsFillPatchCheckFill } from "react-icons/bs";

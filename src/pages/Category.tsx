@@ -2,19 +2,44 @@ import type React from "react";
 import { CiGrid41 } from "react-icons/ci";
 import { PiGridFourThin } from "react-icons/pi";
 import { CiFilter } from "react-icons/ci";
-import { IoIosArrowUp } from "react-icons/io";
-import { useEffect, useState } from "react";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { useEffect, useMemo, useState } from "react";
 import ProductList from "../components/Product/ProductList";
 import { useInfiniteProducts } from "../hooks/reactQuery/product";
 import { useInView } from "react-intersection-observer";
 import SkeletonProductCard from "../components/Product/SkeletonProductCard";
+import { useSearchParams } from "react-router-dom";
+import type { Filter } from "../types/category";
 
 const Category: React.FC = () => {
+  const [searchParams, setSeacrhParams] = useSearchParams();
   const [isGalleryMode, setIsGalleryMode] = useState<boolean>(false);
-  const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
-    useInfiniteProducts({
-      limit: 24,
+
+  const getParamValue = (key: string, fallback?: number) => {
+    const value = searchParams.get(key);
+    return value !== null ? Number(value) : fallback;
+  };
+
+  const filter = useMemo(() => {
+    const base: Partial<Filter> = {
+      page: getParamValue("page", 0),
+      limit: getParamValue("limit", 24),
+    };
+    const optionalKeys = ["id", "color", "size", "orderType"] as const;
+
+    optionalKeys.forEach((key) => {
+      const value = searchParams.get(key);
+      if (value) {
+        const field = key === "id" ? "category" : key;
+        base[field as keyof Filter] = Number(value);
+      }
     });
+
+    return base as Filter;
+  }, [searchParams]);
+
+  const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
+    useInfiniteProducts(filter);
 
   const { ref, inView } = useInView({
     threshold: 0.1,
@@ -25,6 +50,12 @@ const Category: React.FC = () => {
       fetchNextPage();
     }
   }, [inView, hasNextPage, fetchNextPage]);
+
+  const setQueryParam = (key: string, value: number) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set(key, value.toString());
+    setSeacrhParams(newParams);
+  };
 
   return (
     <div className="">
@@ -41,17 +72,35 @@ const Category: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="flex gap-4">
               <button
-                className="border-[1px] border-zinc-200
-               rounded-full p-4 py-1"
+                onClick={() =>
+                  setQueryParam("orderType", filter.orderType !== 3 ? 3 : 4)
+                }
+                className={`border-[1px] border-zinc-200 transition-all duration-300
+               rounded-full p-4 py-1 ${
+                 filter.orderType !== 3 ? "" : "bg-zinc-100"
+               }`}
               >
                 Mới nhất
               </button>
               <button
+                onClick={() => setQueryParam("orderType", 1)}
                 className={`flex items-center gap-2 border-[1px] border-zinc-200
-               rounded-full p-4 py-1`}
+               rounded-full p-4 py-1 transition-all duration-300 ${
+                 filter.orderType === 1 ? "bg-zinc-100" : ""
+               }`}
               >
-                <span>Giá</span>
+                <span>Giá tăng</span>
                 <IoIosArrowUp />
+              </button>
+              <button
+                onClick={() => setQueryParam("orderType", 2)}
+                className={`flex items-center gap-2 border-[1px] border-zinc-200
+               rounded-full p-4 py-1 transition-all duration-300 ${
+                 filter.orderType === 2 ? "bg-zinc-100" : ""
+               }`}
+              >
+                <span>Giá giảm</span>
+                <IoIosArrowDown />
               </button>
             </div>
             <div className="flex items-center gap-3">

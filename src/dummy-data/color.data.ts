@@ -1,4 +1,4 @@
-import type { Color } from "../types/product.type";
+import type { Color } from "../types/product";
 
 export const colorDummyData: Color[] = [
   {

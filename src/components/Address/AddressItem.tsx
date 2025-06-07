@@ -1,5 +1,5 @@
 import AddressService from "../../services/address.service";
-import { Address } from "../../types/address.type";
+import { Address } from "../../types/address";
 
 type AddressItemProps = {
   address: Address;
