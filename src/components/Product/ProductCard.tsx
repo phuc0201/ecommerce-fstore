@@ -16,7 +16,9 @@ const ProductCard: React.FC<{
     <div className="grid gap-2">
       <Link
         to={"/product/" + product.urlHandle}
-        className={`${displayProductInfo ? "min-h-[383px]" : "min-h-[259px]"}`}
+        className={`overflow-hidden w-full aspect-[3/4] ${
+          displayProductInfo ? "rounded-2xl" : ""
+        }`}
       >
         <img
           loading="lazy"
