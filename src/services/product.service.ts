@@ -19,4 +19,12 @@ export const ProductService = {
   getProductDetails: (productId: number): Promise<Product> => {
     return client.get<Product>("/product/" + productId).then((res) => res.data);
   },
+
+  searchProduct(searchValue: string): Promise<IPagedResults<Product>> {
+    return client
+      .get<IPagedResults<Product>>("/search", {
+        params: { query: searchValue },
+      })
+      .then((res) => res.data);
+  },
 };

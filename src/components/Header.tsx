@@ -1,11 +1,16 @@
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { IoMenuOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import MegaMenu from "./MegaMenu";
 import { Link, useLocation } from "react-router";
 import { useCart } from "../hooks/useCart";
 import CartDrawer from "./Cart/CartDrawer";
+import SearchResults from "./SearchResults";
+import type { IPagedResults } from "../types/pagnigate";
+import type { Product } from "../types/product";
+import { ProductService } from "../services/product.service";
+import { debounce } from "lodash";
 
 const Header: React.FC = () => {
   const location = useLocation();
@@ -13,9 +18,35 @@ const Header: React.FC = () => {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const { cart } = useCart();
   const [openCartDrawer, setOpenCartDrawer] = useState<boolean>(false);
+  const [openSearchResults, setOpenSearchResults] = useState<boolean>(false);
+  const [products, setProducts] = useState<IPagedResults<Product>>({
+    data: [],
+    total: 0,
+    totalPages: 0,
+    page: 0,
+    limit: 10,
+  });
 
   const handleMenuClick = () => {
     setIsMegaMenuOpen((prev) => !prev);
+  };
+
+  const fetchSearchResults = (searchValue: string) => {
+    if (!searchValue) return;
+    ProductService.searchProduct(searchValue).then((res) => {
+      setProducts(res);
+    });
+  };
+
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      fetchSearchResults(value);
+    }, 100),
+    []
+  );
+
+  const handleSearch = (value: string) => {
+    debouncedSearch(value);
   };
 
   useEffect(() => {
@@ -39,6 +70,11 @@ const Header: React.FC = () => {
             : "bg-transparent"
         }`}
       >
+        <SearchResults
+          products={products}
+          isSearchResultOpen={openSearchResults}
+          setIsSearchResultOpen={setOpenSearchResults}
+        />
         <MegaMenu
           isMegaMenuOpen={isMegaMenuOpen}
           setIsMegaMenuOpen={setIsMegaMenuOpen}
@@ -58,15 +94,17 @@ const Header: React.FC = () => {
         </Link>
         <div className="flex items-center gap-2">
           <div
-            className={`flex items-center gap-2 bg-white px-5 py-2 w-52 rounded-2xl border border-transparent hover:border-zinc-300 duration-300 transition-all ease-linear ${
+            className={`flex items-center gap-2 bg-white px-5 py-1 w-52 rounded-2xl border border-transparent hover:border-zinc-300 duration-300 transition-all ease-linear ${
               scrolled || location.pathname !== "/" ? "border-zinc-300" : ""
             }`}
           >
             <CiSearch className="" />
             <input
+              onChange={(e) => handleSearch(e.target.value)}
+              onFocus={() => setOpenSearchResults(true)}
               type="text"
               placeholder="Tìm kiếm"
-              className="w-full outline-none focus:ring-0 focus:border-0 text-xs placeholder:text-xs"
+              className="w-full outline-none focus:ring-0 focus:border-0 text-xs placeholder:text-xs py-1"
             />
           </div>
           <button
@@ -74,7 +112,7 @@ const Header: React.FC = () => {
             className="relative cursor-pointer"
           >
             <div
-              className={`absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex z-10 ${
+              className={`absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex z-[9] ${
                 cart && cart.itemDTO.length > 0 ? "opacity-100" : "opacity-0"
               }`}
             >

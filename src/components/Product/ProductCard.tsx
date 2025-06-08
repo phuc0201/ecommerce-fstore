@@ -48,7 +48,7 @@ const ProductCard: React.FC<{
               </s>
             )}
           </div>
-          <div className="line-clamp-1">{product.name}</div>
+          <div className="line-clamp-1 text-black">{product.name}</div>
           <div className="flex items-center gap-1">
             {product.colors.map((item) => (
               <button
