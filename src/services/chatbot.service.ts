@@ -5,7 +5,12 @@ import type { ChatbotMessage } from "../types/chatbot";
 export const ChatbotService = {
   getUserId() {
     const userID = localStorage.getItem(SystemConstants.USER_ID);
-    return userID ? userID : uuidv4();
+    if (!userID) {
+      const id = uuidv4();
+      localStorage.setItem(SystemConstants.USER_ID, id);
+      return id;
+    }
+    return userID;
   },
 
   async askBot(message: string): Promise<ChatbotMessage> {
