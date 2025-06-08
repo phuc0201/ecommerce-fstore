@@ -1,16 +1,16 @@
 import axios from "axios";
 const client = axios.create({
-  baseURL: "http://fstore-nbphuoc.ddns.net:8080",
+  baseURL: "https://api.nbphuoc.xyz",
 });
 
-client.interceptors.request.use(function (config) {
-  if (localStorage.user) {
-    const userStr = localStorage.getItem("user");
-    const userStorage = userStr ? JSON.parse(userStr) : null;
-    config.headers.Authorization = `Bearer ${userStorage?.tokens?.access?.token}`;
-  }
-  return config;
-});
+// client.interceptors.request.use(function (config) {
+//   if (localStorage.user) {
+//     const userStr = localStorage.getItem("user");
+//     const userStorage = userStr ? JSON.parse(userStr) : null;
+//     config.headers.Authorization = `Bearer ${userStorage?.tokens?.access?.token}`;
+//   }
+//   return config;
+// });
 
 // client.interceptors.response.use(
 //   (response) => response,

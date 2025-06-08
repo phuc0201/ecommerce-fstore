@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CiLocationArrow1, CiUser } from "react-icons/ci";
 import { GoArrowLeft } from "react-icons/go";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
 import { CartService } from "../services/cart.service";
 import { PiTruckLight } from "react-icons/pi";
@@ -14,21 +14,56 @@ import AddressDrawer from "../components/Address/AddressDrawer";
 import { OrderDTO } from "../types/cart";
 import AddressService from "../services/address.service";
 import { OrderService } from "../services/order.service";
+import { BsQrCodeScan } from "react-icons/bs";
+import { toast } from "react-toastify";
 
 const Checkout: React.FC = () => {
   const { cart } = useCart();
+  const [params] = useSearchParams();
   const [isVisibleAddressDrawer, setVisibleAddressDrawer] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
+    "COD" | "BANKING"
+  >("COD");
+  const [isShowPaymentSelecter, setIsShowPaymentSelector] =
+    useState<boolean>(false);
+
   const navigate = useNavigate();
   const [orderDTO, setOrderDTO] = useState<OrderDTO>({
     name: "",
-    email: "",
+    email: "phcnguyenba@gmail.com",
     phone: "",
     address: "",
-    paymentMethod: "COD",
+    paymentMethod: selectedPaymentMethod,
     cart: cart?.itemDTO || [],
+    returnUrl: import.meta.env.VITE_RETURN_PAYMENT_URL,
   });
 
   const recipientInfo = AddressService.getAddressFromLocal();
+
+  useEffect(() => {
+    const status = params.get("status");
+    if (!status) return;
+    if (status) setSelectedPaymentMethod("BANKING");
+    switch (status) {
+      case "PAID":
+        toast.success("Thanh toán thành công! Kiểm tra email để xem hóa đơn");
+        setTimeout(() => {
+          navigate(PATH.CATEGORY);
+        }, 2000);
+        break;
+      case "PENDING":
+        toast.warning("Đơn hàng đang chờ thanh toán.");
+        break;
+      case "PROCESSING":
+        toast.info("Đơn hàng đang được xử lý.");
+        break;
+      case "CANCELLED":
+        toast.error("Thanh toán thất bại");
+        break;
+      default:
+        break;
+    }
+  }, [params]);
 
   useEffect(() => {
     if (recipientInfo && recipientInfo.length > 0) {
@@ -59,15 +94,15 @@ const Checkout: React.FC = () => {
       orderDTO.address === "" ||
       orderDTO.email === ""
     ) {
-      alert("Vui lòng điền đầy đủ thông tin người nhận.");
+      toast.warning("Vui lòng điền đầy đủ thông tin người nhận.");
       return;
     }
-
+    orderDTO.paymentMethod = selectedPaymentMethod;
     const order = await OrderService.createOrder(orderDTO);
-    console.log("Order placed:", order);
-    if (
-      window.confirm("Đặt hàng thành công! Hãy kiểm tra email để xem hóa đơn.")
-    ) {
+    if (selectedPaymentMethod == "BANKING") {
+      window.location.href = order.paymentRef;
+    } else {
+      toast.success("Đặt hàng thành công! Hãy kiểm tra email để xem hóa đơn!");
       navigate(PATH.CATEGORY);
     }
   };
@@ -153,13 +188,53 @@ const Checkout: React.FC = () => {
           </div>
 
           <div className="w-[436px] h-fit p-6 border border-zinc-200 rounded-2xl">
-            <button className="flex items-center justify-between gap-2 p-3 px-4 border border-zinc-200 rounded-xl text-sm w-full">
+            <div
+              onClick={() => setIsShowPaymentSelector((prev) => !prev)}
+              className="relative flex items-center justify-between cursor-pointer gap-2 p-3 px-4 border border-zinc-200 rounded-xl text-sm w-full"
+            >
               <div className="flex items-center gap-2">
-                <GiMoneyStack className="text-2xl" />
-                <div>(COD) Thanh toán khi nhận hàng</div>
+                {selectedPaymentMethod == "COD" ? (
+                  <GiMoneyStack className="text-2xl" />
+                ) : (
+                  <BsQrCodeScan className="text-2xl" />
+                )}
+                <div>
+                  {selectedPaymentMethod == "COD"
+                    ? "(COD) Thanh toán khi nhận hàng"
+                    : "(BANKING) Thanh toán online"}
+                </div>
               </div>
               <IoIosArrowForward className="text-xl text-zinc-400" />
-            </button>
+
+              <div
+                className={`absolute bg-white top-full left-0 right-0 rounded-lg overflow-hidden border transition-all duration-300 ${
+                  isShowPaymentSelecter ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                {["COD", "BANKING"].map((item, index) => (
+                  <button
+                    onClick={() =>
+                      setSelectedPaymentMethod(item as "COD" | "BANKING")
+                    }
+                    key={index}
+                    className="flex items-center justify-between gap-2 p-3 px-4 text-sm w-full hover:bg-zinc-100"
+                  >
+                    <div className="flex items-center gap-2">
+                      {item == "COD" ? (
+                        <GiMoneyStack className="text-2xl" />
+                      ) : (
+                        <BsQrCodeScan className="text-2xl" />
+                      )}
+                      <div>
+                        {item == "COD"
+                          ? "(COD) Thanh toán khi nhận hàng"
+                          : "(BANKING) Thanh toán online"}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <div className="grid divide-y-2 divide-zinc-200 divide-dotted gap-y-3">
               <div className="grid gap-3 text-sm mt-4">

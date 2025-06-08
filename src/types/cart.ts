@@ -68,6 +68,7 @@ export class OrderDTO {
   email: string;
   paymentMethod: string;
   cart: CartItemDTO[];
+  returnUrl: string;
 
   constructor(
     name: string = "",
@@ -75,7 +76,8 @@ export class OrderDTO {
     phone: string = "",
     email: string = "",
     paymentMethod: "COD" | "BANKING" = "COD",
-    cart: CartItemDTO[] = []
+    cart: CartItemDTO[] = [],
+    returnUrl: string = import.meta.env.VITE_RETURN_PAYMENT_URL
   ) {
     this.name = name;
     this.address = address;
@@ -83,5 +85,6 @@ export class OrderDTO {
     this.email = email;
     this.paymentMethod = paymentMethod;
     this.cart = cart;
+    this.returnUrl = returnUrl;
   }
 }
