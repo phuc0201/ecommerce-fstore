@@ -3,7 +3,7 @@ import { ChatbotService } from "../../services/chatbot.service";
 import { useEffect, useRef, useState } from "react";
 import type { ChatbotMessage } from "../../types/chatbot";
 import Message from "./Message";
-
+import "./FloatingBot";
 interface ChatBoxProps {
   messages: ChatbotMessage[];
   onSetMessages: React.Dispatch<React.SetStateAction<ChatbotMessage[]>>;
@@ -17,12 +17,13 @@ const ChatBox: React.FC<ChatBoxProps> = ({
 }) => {
   const [newMessage, setNewMessage] = useState<string>("");
   const chatBodyRef = useRef<HTMLDivElement>(null);
+  const [thinking, setThinking] = useState<boolean>(false);
 
   useEffect(() => {
     if (chatBodyRef.current) {
       chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, thinking]);
 
   const sendMessage = (message: string) => {
     if (newMessage.trim() === "") return;
@@ -36,8 +37,11 @@ const ChatBox: React.FC<ChatBoxProps> = ({
       },
     ]);
 
+    setThinking(true);
+
     ChatbotService.askBot(message).then((res) => {
       if (res) {
+        setThinking(false);
         onSetMessages((prev) => [
           ...prev,
           {
@@ -95,6 +99,26 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                 products={item.products}
               />
             ))}
+
+            {thinking && (
+              <div className="p-3 flex gap-2 items-center">
+                <div className="min-w-10 min-h-10 w-10 h-10 rounded-full bg-transparent">
+                  <img
+                    src="./assets/imgs/bot.png"
+                    alt=""
+                    className="object-cover w-full h-full rounded-full"
+                  />
+                </div>
+                <div className="h-fit max-w-full bg-gray-200 p-3 rounded-full">
+                  <div className="load-row flex items-center gap-1 justify-center">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

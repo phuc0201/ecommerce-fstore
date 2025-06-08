@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Message: React.FC<ChatbotMessage> = ({ message, sender, products }) => {
   return (
     <div
-      className={`flex gap-1 w-full ${
+      className={`flex gap-1 w-full max-w-full ${
         sender == "user" ? "flex-row-reverse" : ""
       }`}
     >
@@ -20,8 +20,8 @@ const Message: React.FC<ChatbotMessage> = ({ message, sender, products }) => {
           className="h-10 min-w-10 w-10 rounded-full"
         />
       </div>
-      <div className="w-fit">
-        <div className="text-sm bg-zinc-100 rounded-xl p-2 w-full">
+      <div className={sender == "user" ? "flex justify-end max-w-[80%]" : ""}>
+        <div className="text-sm bg-zinc-100 rounded-xl p-2 w-full max-w-[80%]">
           <span className="">{message}</span>
         </div>
         {products.length > 0 &&
