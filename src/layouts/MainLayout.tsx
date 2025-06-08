@@ -3,6 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useEffect } from "react";
+import ChatBot from "../components/chatbot";
 
 const MainLayout: React.FC = () => {
   const { pathname } = useLocation();
@@ -16,6 +17,7 @@ const MainLayout: React.FC = () => {
       <Header />
       <Outlet />
       <Footer />
+      <ChatBot />
     </>
   );
 };
