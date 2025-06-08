@@ -54,7 +54,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({
 
   return (
     <div>
-      <div className="fixed cursor-pointer top-0 left-0 right-0 bottom-0 z-[1001]"></div>
+      <div
+        onClick={onClose}
+        className="fixed cursor-pointer top-0 left-0 right-0 bottom-0 z-[1001]"
+      ></div>
       <div className="chatbox fixed right-0 md:right-4 bottom-0 md:bottom-4 md:top-auto md:left-auto top-0 left-0 z-[1002] bg-white shadow-lg md:rounded-lg md:w-96 md:h-[500px] overflow-hidden flex flex-col justify-between">
         <header className="chatbox-header p-3 bg-color-brand-surface text-white flex justify-between">
           <div className="font-bold">

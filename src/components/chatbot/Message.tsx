@@ -52,7 +52,7 @@ const Message: React.FC<ChatbotMessage> = ({ message, sender, products }) => {
                     </s>
                   )}
                   <Link
-                    to={"/product/" + item.id}
+                    to={"/product/" + item.urlHandle}
                     className="w-fit border p-2 px-4 transition-all duration-300 hover:text-blue-700 hover:border-blue-500 rounded-full"
                   >
                     Xem chi tiết
