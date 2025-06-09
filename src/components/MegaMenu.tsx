@@ -104,7 +104,10 @@ const MegaMenu: React.FC<MegaMenuProps> = (props) => {
                   key={index}
                   className="cursor-pointer space-y-3 px-4 first:pl-0 last:pr-0"
                 >
-                  <Link to={""} className="group flex w-fit items-center">
+                  <Link
+                    to={PATH.CATEGORY + "?id=" + item.id}
+                    className="group flex w-fit items-center"
+                  >
                     <p className="text-lg font-semibold uppercase group-hover:text-blue-800">
                       {item.name}
                     </p>
@@ -130,7 +133,7 @@ const MegaMenu: React.FC<MegaMenuProps> = (props) => {
                             className={`${isOpen ? "block" : "hidden"} px-5`}
                           >
                             <Link
-                              to={PATH.CATEGORY + "?id=" + item.id}
+                              to={PATH.CATEGORY + "?id=" + itemSub.id}
                               className="py-2 text-sm block"
                             >
                               Tất cả
