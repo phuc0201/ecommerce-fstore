@@ -130,7 +130,11 @@ const Help: React.FC = () => {
                   )}
 
                   <p className="text-sm text-gray-700 line-clamp-2">
-                    {ticket.customerNote || "Không có ghi chú"}
+                    Khách: {ticket.customerNote || "Không có ghi chú"}
+                  </p>
+
+                  <p className="text-sm text-gray-700 line-clamp-2">
+                    Quản trị viên: {ticket.adminNote || "Không có ghi chú"}
                   </p>
                 </div>
 
