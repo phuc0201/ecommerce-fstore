@@ -24,6 +24,7 @@ const Checkout: React.FC = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     "COD" | "BANKING"
   >("COD");
+  const [shippingFee, setShippingFee] = useState<number>(0);
   const [isShowPaymentSelecter, setIsShowPaymentSelector] =
     useState<boolean>(false);
 
@@ -67,6 +68,23 @@ const Checkout: React.FC = () => {
     }
   }, [params]);
 
+  const fetchShippingFee = async (
+    to_district_id: number,
+    to_ward_code: string
+  ) => {
+    try {
+      const res = await OrderService.getShippingFee(
+        to_district_id,
+        to_ward_code
+      );
+      if (res && res.data && res.data.total) {
+        setShippingFee(res.data.total);
+      }
+    } catch (error) {
+      setShippingFee(15000);
+    }
+  };
+
   useEffect(() => {
     if (recipientInfo && recipientInfo.length > 0) {
       const defaultAddress = recipientInfo.find(
@@ -81,6 +99,13 @@ const Checkout: React.FC = () => {
           to_district_id: defaultAddress.to_district_id,
           to_ward_code: defaultAddress.to_ward_code,
         }));
+
+        if (defaultAddress.to_district_id && defaultAddress.to_ward_code) {
+          fetchShippingFee(
+            defaultAddress.to_district_id,
+            defaultAddress.to_ward_code
+          );
+        }
       }
     }
   }, [isVisibleAddressDrawer]);
@@ -270,7 +295,12 @@ const Checkout: React.FC = () => {
 
                   <div className="flex items-center gap-2 font-medium">
                     <PiTruckLight className="text-green-600 text-xl" />
-                    <p>15.000 đ</p>
+                    <p>
+                      {shippingFee.toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -280,7 +310,8 @@ const Checkout: React.FC = () => {
                   <p className="text-sm">Thành tiền</p>
                   <p className="font-medium">
                     {(
-                      CartService.calculateTotalPrice(cart?.items || []) + 15000
+                      CartService.calculateTotalPrice(cart?.items || []) +
+                      shippingFee
                     ).toLocaleString("vi-VN", {
                       style: "currency",
                       currency: "VND",

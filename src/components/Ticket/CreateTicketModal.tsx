@@ -1,9 +1,6 @@
 import { useState } from "react";
-import { CiClock2 } from "react-icons/ci";
-import { FiAlertCircle, FiCheckCircle } from "react-icons/fi";
-import { GoXCircle } from "react-icons/go";
-import { TicketStatus, TicketType } from "../../types/ticket";
-import type { CreateTicketDto, Ticket } from "../../types/ticket";
+import { TicketType } from "../../types/ticket";
+import type { CreateTicketDto } from "../../types/ticket";
 import { toast } from "react-toastify";
 import { createTicket } from "../../services/ticket.service";
 

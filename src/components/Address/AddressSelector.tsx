@@ -10,7 +10,7 @@ export default function AddressSelector(props: {
   const [addressDetails, setAddressDetails] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
   const [provinces, setProvinces] = useState<any[]>([]);
-  const [searchProvinces, setSearchProvinces] = useState<any>([]);
+  const [searchProvinces, setSearchProvinces] = useState<any[]>([]);
   const [districts, setDistricts] = useState<any[]>([]);
   const [searchDistricts, setSearchDistricts] = useState<any[]>([]);
   const [wards, setWards] = useState<any[]>([]);
@@ -276,6 +276,7 @@ export default function AddressSelector(props: {
         }`}
       >
         {selectedAddresses.length < 1 &&
+          searchProvinces.length > 0 &&
           searchProvinces
             .filter(
               (item: any) => !item.ProvinceName?.toLowerCase().includes("test")
@@ -296,6 +297,7 @@ export default function AddressSelector(props: {
             ))}
 
         {selectedAddresses.length === 1 &&
+          searchDistricts.length > 0 &&
           searchDistricts
             .filter(
               (item: any) => !item.DistrictName?.toLowerCase().includes("test")
@@ -316,6 +318,7 @@ export default function AddressSelector(props: {
             ))}
 
         {selectedAddresses.length === 2 &&
+          searchWards.length > 0 &&
           searchWards
             .filter(
               (item: any) => !item.WardName?.toLowerCase().includes("test")
