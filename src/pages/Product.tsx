@@ -112,6 +112,7 @@ const Product: React.FC = () => {
             el.style.transition = "none";
             el.style.opacity = "0";
             el.style.transform = "scale(1)";
+            el.style.zIndex = "-1";
             el.style.transformOrigin = "center center";
             setIsAnimating(false);
           }, 800);
@@ -189,7 +190,11 @@ const Product: React.FC = () => {
         <div className="flex gap-12">
           <div className="flex gap-3 w-[648px]">
             {/* Thumbnail Slider */}
-            <div className="overflow-y-hidden h-[704px] min-w-[108px]">
+            <div
+              className={`overflow-y-hidden h-[704px] min-w-[108px] ${
+                (data?.photos.length || 0) > 0 ? "" : "bg-zinc-100 rounded-lg"
+              }`}
+            >
               <div className="max-h-[704px] relative">
                 <div className="slider-container w-[108px] overflow-hidden">
                   <Slider {...thumbSettings} ref={thumbSlider}>
@@ -214,7 +219,7 @@ const Product: React.FC = () => {
 
             {/* Main Slider */}
             <div className="relative w-full">
-              <div className="w-[528px] h-[704px] relative">
+              <div className="w-[528px] h-[704px] relative bg-zinc-100 rounded-lg">
                 <div className="">
                   <div
                     className={`absolute inset-0 bg-black/30 transition-all rounded-2xl durantion-1000 ${
@@ -235,7 +240,7 @@ const Product: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="absolute bottom-5 right-5 z-10 flex items-center gap-3">
+                <div className="absolute bottom-5 right-5 z-[5] flex items-center gap-3">
                   <button
                     onClick={prevPhoto}
                     className="w-8 h-8 bg-white rounded-full shadow-md active:scale-95 flex"
@@ -272,6 +277,7 @@ const Product: React.FC = () => {
               colors={data?.colors ?? []}
               sizes={data?.sizes ?? []}
               description={data?.metaDesc ?? ""}
+              variants={data?.variants || []}
               onColorChange={handleColorChange}
               onAddToCart={handleAddToCart}
               setSelectedSize={setSelectedSize}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { colorDummyData } from "../../dummy-data/color.data";
-import type { Color, Size } from "../../types/product";
+import type { Color, Size, Variant } from "../../types/product";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import { IoBagOutline } from "react-icons/io5";
 import { BsFillPatchCheckFill } from "react-icons/bs";
@@ -18,6 +18,7 @@ type ProductInfoProps = {
   description: string;
   selectedSize: Size;
   quantity: number;
+  variants: Variant[];
   setQuantity: (quantity: number) => void;
   onColorChange: (colorId: number) => void;
   onAddToCart: (colorId: number) => void;
@@ -32,6 +33,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   description,
   selectedSize,
   quantity = 1,
+  variants,
   setQuantity,
   onColorChange,
   onAddToCart,
@@ -49,9 +51,20 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     }
 
     if (sizes.length > 0) {
+      const variant = variants.find((v) => v.inventory.stockQuantity > 0);
+      if (variant) {
+        setSelectedSize(variant?.size);
+      }
       setSelectedSize(sizes[0]);
     }
   }, [colors, sizes]);
+
+  useEffect(() => {
+    const variant = variants.find((v) => v.inventory.stockQuantity > 0);
+    if (variant) {
+      setSelectedSize(variant?.size);
+    }
+  }, [selectedColor]);
 
   const formatPrice = (p: number) =>
     p.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
@@ -59,6 +72,13 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   const getColorHex = (id: number): string => {
     const index = colorDummyData.findIndex((i) => i.id === id);
     return index < 0 ? "" : colorDummyData[index].hex || "";
+  };
+
+  const checkInventory = (colorId: number, sizeId: number): number => {
+    return (
+      variants.find((v) => v.sizeId === sizeId && v.colorId === colorId)
+        ?.inventory.stockQuantity || 0
+    );
   };
 
   return (
@@ -99,13 +119,26 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           {sizes.map((size) => (
             <button
               key={size.id}
-              onClick={() => setSelectedSize(size)}
-              className={`w-12 h-12 rounded-full border-2 text-xs ${
-                selectedSize === size
+              onClick={() => {
+                if (checkInventory(selectedColor.id, size.id) > 0) {
+                  setSelectedSize(size);
+                }
+              }}
+              className={`w-12 h-12 rounded-full border-2 text-xs relative ${
+                selectedSize.id === size.id
                   ? "border-color-brand-surface"
                   : "border-zinc-300"
+              } ${
+                checkInventory(selectedColor.id, size.id) > 0
+                  ? ""
+                  : "text-zinc-300"
               }`}
             >
+              {checkInventory(selectedColor.id, size.id) > 0 ? (
+                ""
+              ) : (
+                <div className="w-[2px] h-11 bg-zinc-300 absolute left-1/2 top-0 -translate-x-1/2 z-10 rotate-45"></div>
+              )}
               {size.name}
             </button>
           ))}

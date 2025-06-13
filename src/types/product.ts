@@ -19,16 +19,25 @@ export interface Photo {
   colorId: number;
 }
 
+export interface Inventory {
+  id: number;
+  productId: number;
+  variantId: number;
+  stockQuantity: number;
+  updatedAt: string;
+  createdAt: string;
+}
+
 export interface Variant {
   id: number;
   code: string;
-  inventoryQuantity: number;
   instock: boolean;
   colorId: number;
   sizeId: number;
   productId: number;
   color: Color;
   size: Size;
+  inventory: Inventory;
 }
 
 export interface Brand {
