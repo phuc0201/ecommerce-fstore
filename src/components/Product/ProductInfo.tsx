@@ -86,15 +86,15 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
       <div className="text-lg font-semibold text-zinc-800">
         {formatPrice(price)}
       </div>
-      <h1 className="text-xl mt-2">{name}</h1>
+      <h1 className="text-xl mt-2">{name ? name : "Loading........."}</h1>
 
       <div className="mt-4">
         <div className="text-sm font-medium mb-1">
           Màu sắc: {selectedColor.name}
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 min-h-12">
           {colors.map((color) => (
-            <div
+            <button
               key={color.id}
               onClick={() => {
                 setSelectedColor(color);
@@ -115,7 +115,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         <div className="text-sm font-medium mb-1">
           Kích thước: {selectedSize.name}
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 h-12">
           {sizes.map((size) => (
             <button
               key={size.id}
