@@ -4,19 +4,25 @@ export class Address {
   phoneNumber: string;
   address: string;
   defaultAddress: boolean;
+  to_district_id: number;
+  to_ward_code: string;
 
   constructor(
     id: string = "",
     fullname: string = "",
     phoneNumber: string = "",
     address: string = "",
-    defaultAddress: boolean = false
+    defaultAddress: boolean = false,
+    to_district_id: number = 0,
+    to_ward_code: string = ""
   ) {
     this.id = id;
     this.fullname = fullname;
     this.address = address;
     this.phoneNumber = phoneNumber;
     this.defaultAddress = defaultAddress;
+    this.to_district_id = to_district_id;
+    this.to_ward_code = to_ward_code;
   }
 }
 

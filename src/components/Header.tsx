@@ -1,5 +1,5 @@
 import { HiOutlineShoppingBag } from "react-icons/hi2";
-import { IoMenuOutline } from "react-icons/io5";
+import { IoHelpOutline, IoMenuOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import { useCallback, useEffect, useState } from "react";
 import MegaMenu from "./MegaMenu";
@@ -125,6 +125,14 @@ const Header: React.FC = () => {
               className="text-2xl relative"
             />
           </button>
+
+          <Link
+            to={"/help"}
+            className="flex items-center ml-3 border border-black rounded-full p-1 px-3"
+          >
+            <IoHelpOutline className="" />
+            <p className="text-sm">Hỗ trợ</p>
+          </Link>
         </div>
       </header>
 

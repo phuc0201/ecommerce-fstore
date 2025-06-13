@@ -13,6 +13,8 @@ export default function FormAddress(props: {
     phoneNumber: "",
     address: "",
     defaultAddress: false,
+    to_district_id: 0,
+    to_ward_code: "",
   });
 
   const [isOpenFormAddressSelector, setIsOpenFormAddressSelector] =
@@ -26,10 +28,16 @@ export default function FormAddress(props: {
     }));
   };
 
-  const handleSetAddress = (address: string) => {
+  const handleSetAddress = (newAddress: {
+    address: string;
+    to_district_id: number;
+    to_ward_code: string;
+  }) => {
     setFormData((prevData) => ({
       ...prevData,
-      ["address"]: address,
+      ["address"]: newAddress.address,
+      ["to_district_id"]: newAddress.to_district_id,
+      ["to_ward_code"]: newAddress.to_ward_code,
     }));
   };
 

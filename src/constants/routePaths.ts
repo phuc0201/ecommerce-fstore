@@ -7,6 +7,7 @@ const PATH = {
   LOGIN: "/login",
   REGISTER: "/register",
   PROFILE: "/profile",
+  HELP: "HELP",
 };
 
 export const REFRESH_TOKEN_URL = "/api/v1/auth/refresh-tokens";

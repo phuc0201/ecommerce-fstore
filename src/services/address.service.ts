@@ -1,6 +1,8 @@
+import axios from "axios";
 import { SystemConstants } from "../constants/SystemContants";
 import { Address } from "../types/address";
 import { v4 as uuidv4 } from "uuid";
+
 const AddressService = {
   getAddress: async () => {
     try {
@@ -13,6 +15,61 @@ const AddressService = {
       return await response.json();
     } catch (error) {
       console.error("Error fetching address:", error);
+      throw error;
+    }
+  },
+
+  getProvinces: async () => {
+    try {
+      const response = await axios.get(
+        "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
+        {
+          headers: {
+            Token: "3ba50132-46c7-11f0-9b81-222185cb68c8",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching provinces:", error);
+      throw error;
+    }
+  },
+
+  getDistricts: async (provinceId: any) => {
+    try {
+      const response = await axios.get(
+        "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district",
+        {
+          headers: {
+            Token: "3ba50132-46c7-11f0-9b81-222185cb68c8",
+          },
+          params: {
+            province_id: provinceId,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching districts:", error);
+      throw error;
+    }
+  },
+
+  getWards: async (districtId: number) => {
+    try {
+      const response = await axios.post(
+        "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward",
+        { district_id: districtId },
+        {
+          headers: {
+            Token: "3ba50132-46c7-11f0-9b81-222185cb68c8",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching wards:", error);
       throw error;
     }
   },

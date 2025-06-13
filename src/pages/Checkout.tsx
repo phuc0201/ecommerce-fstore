@@ -36,6 +36,8 @@ const Checkout: React.FC = () => {
     paymentMethod: selectedPaymentMethod,
     cart: cart?.itemDTO || [],
     returnUrl: import.meta.env.VITE_RETURN_PAYMENT_URL,
+    to_district_id: 0,
+    to_ward_code: "",
   });
 
   const recipientInfo = AddressService.getAddressFromLocal();
@@ -76,6 +78,8 @@ const Checkout: React.FC = () => {
           name: defaultAddress.fullname,
           phone: defaultAddress.phoneNumber,
           address: defaultAddress.address,
+          to_district_id: defaultAddress.to_district_id,
+          to_ward_code: defaultAddress.to_ward_code,
         }));
       }
     }

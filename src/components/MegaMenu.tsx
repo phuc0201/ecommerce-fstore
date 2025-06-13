@@ -2,11 +2,6 @@ import { useEffect, useState } from "react";
 import type { Category } from "../types/category";
 import { categoryDummyData } from "../dummy-data/category.data";
 import { Link, useLocation } from "react-router";
-import { CiShop } from "react-icons/ci";
-import { PiNewspaperClippingThin } from "react-icons/pi";
-import { PiGiftThin } from "react-icons/pi";
-import { CiDiscount1 } from "react-icons/ci";
-import { PiShirtFoldedThin } from "react-icons/pi";
 import { GoArrowUpRight } from "react-icons/go";
 import { SlArrowDown } from "react-icons/sl";
 import { collectionDummyData } from "../dummy-data/collection.data";
@@ -62,40 +57,6 @@ const MegaMenu: React.FC<MegaMenuProps> = (props) => {
         }`}
       >
         <div className="w-full h-full bg-white text-black p-5 px-12">
-          {/* HEADER */}
-          <div className="flex justify-center items-center gap-3 w-full">
-            <Link to={PATH.CATEGORY}>
-              <div className="flex items-center gap-2 text-base bg-zinc-100 rounded-xl p-2 px-3">
-                <CiShop className="text-3xl" />
-                <p className="uppercase">cửa hàng</p>
-              </div>
-            </Link>
-            <Link to={""}>
-              <div className="flex items-center gap-2 text-base bg-zinc-100 rounded-xl p-2 px-3">
-                <PiNewspaperClippingThin className="text-3xl" />
-                <p className="uppercase">tin tức</p>
-              </div>
-            </Link>
-            <Link to={""}>
-              <div className="flex items-center gap-2 text-base bg-zinc-100 rounded-xl p-2 px-3">
-                <PiGiftThin className="text-3xl" />
-                <p className="uppercase">Mới về</p>
-              </div>
-            </Link>
-            <Link to={""}>
-              <div className="flex items-center gap-2 text-base bg-zinc-100 rounded-xl p-2 px-3">
-                <CiDiscount1 className="text-3xl" />
-                <p className="uppercase">Ưu đãi</p>
-              </div>
-            </Link>
-            <Link to={""}>
-              <div className="flex items-center gap-2 text-base bg-zinc-100 rounded-xl p-2 px-3">
-                <PiShirtFoldedThin className="text-3xl" />
-                <p className="uppercase">đồng phục</p>
-              </div>
-            </Link>
-          </div>
-
           {/* CATEGORY */}
           <div className="grid grid-cols-4 divide-x divide-dashed divide-border-primary mt-5">
             {getMainCategories().map((item, index) => {

@@ -8,6 +8,7 @@ import { CiDeliveryTruck } from "react-icons/ci";
 import { RxLoop } from "react-icons/rx";
 import { GoShield } from "react-icons/go";
 import { FcAssistant } from "react-icons/fc";
+import { Link } from "react-router-dom";
 
 type ProductInfoProps = {
   name: string;
@@ -148,9 +149,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             <div className="flex min-w-10 w-10 h-10 bg-gray-100 rounded-md">
               <CiDeliveryTruck className="m-auto" />
             </div>
-            <div className="text-sm">
-              Giao trong 3–5 ngày và freeship đơn từ 498k
-            </div>
+            <div className="text-sm">Freeship đơn từ 498k</div>
           </div>
           <div className="flex items-center gap-3 border border-gray-200 p-3 rounded-xl">
             <div className="flex min-w-10 w-10 h-10 bg-gray-100 rounded-md">
@@ -164,14 +163,15 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             </div>
             <div className="text-sm">Cam kết bảo mật thông tin khách hàng</div>
           </div>
-          <div className="flex items-center gap-3 border border-gray-200 p-3 rounded-xl">
+          <Link
+            to={""}
+            className="flex items-center gap-3 border border-gray-200 p-3 rounded-xl"
+          >
             <div className="flex min-w-10 w-10 h-10 bg-gray-100 rounded-md">
               <FcAssistant className="m-auto" />
             </div>
-            <div className="text-sm text-blue-600">
-              Cần tư vấn thêm? Chat ngay!
-            </div>
-          </div>
+            <div className="text-sm text-blue-600">Liên hệ hỗ trợ!</div>
+          </Link>
         </div>
       </div>
 

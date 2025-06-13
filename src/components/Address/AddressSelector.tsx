@@ -1,28 +1,25 @@
-import { useState, useEffect, useMemo } from "react";
-import type { Province, District, Ward } from "../../types/address";
+import { useState, useEffect } from "react";
 import { AddressLevel } from "../../types/address";
 import { CiSearch } from "react-icons/ci";
 import AddressService from "../../services/address.service";
 
 export default function AddressSelector(props: {
-  setAddress: (address: string) => void;
+  setAddress: (newAddress: any) => void;
   setClose: (open: boolean) => void;
 }) {
   const [addressDetails, setAddressDetails] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
-  const [provinces, setProvinces] = useState<Province[]>([]);
-  const [administrativeAreas, setAdministrativeAreas] = useState<
-    Province[] | District[] | Ward[]
-  >([]);
-  const [searchableAreas, setSearchableAreas] = useState<
-    Province[] | District[] | Ward[]
-  >([]);
-
+  const [provinces, setProvinces] = useState<any[]>([]);
+  const [searchProvinces, setSearchProvinces] = useState<any>([]);
+  const [districts, setDistricts] = useState<any[]>([]);
+  const [searchDistricts, setSearchDistricts] = useState<any[]>([]);
+  const [wards, setWards] = useState<any[]>([]);
+  const [searchWards, setSearchWards] = useState<any[]>([]);
   const [selectedAddresses, setSelectedAddresses] = useState<
     {
       level: AddressLevel | null;
-      id: string;
-      name: string;
+      id: Number;
+      name: String;
     }[]
   >([]);
 
@@ -39,36 +36,52 @@ export default function AddressSelector(props: {
       address +=
         index < selectedAddresses.length - 1 ? item.name + ", " : item.name;
     });
-    props.setAddress(address);
+    props.setAddress({
+      address: address,
+      to_district_id: selectedAddresses[1].id,
+      to_ward_code: selectedAddresses[2].id,
+    });
     props.setClose(false);
   };
 
-  const handleSelectAddress = (selectedItem: { id: string; name: string }) => {
+  const handleSelectAddress = async (selectedItem: {
+    id: number;
+    name: string;
+  }) => {
     setSearchValue("");
-
     if (currentLevel === AddressLevel.Province) {
-      setSelectedAddresses([{ level: AddressLevel.Province, ...selectedItem }]);
-      const province = provinces.find((p) => p.Id === selectedItem.id);
-      if (province) {
-        setAdministrativeAreas(province.Districts);
-        setCurrentLevel(AddressLevel.District);
-      }
+      setSelectedAddresses((prev) => [
+        ...prev,
+        {
+          level: AddressLevel.Province,
+          ...selectedItem,
+        },
+      ]);
+
+      const districts = await AddressService.getDistricts(selectedItem.id);
+
+      setDistricts(districts.data);
+      setSearchDistricts(districts.data);
+      setCurrentLevel(AddressLevel.District);
     } else if (currentLevel === AddressLevel.District) {
       setSelectedAddresses((prev) => [
         ...prev,
-        { level: AddressLevel.District, ...selectedItem },
+        {
+          level: AddressLevel.District,
+          ...selectedItem,
+        },
       ]);
-      const district = (administrativeAreas as District[]).find(
-        (d) => d.Id === selectedItem.id
-      );
-      if (district) {
-        setAdministrativeAreas(district.Wards);
-        setCurrentLevel(AddressLevel.Ward);
-      }
+      const wards = await AddressService.getWards(selectedItem.id);
+      setWards(wards.data);
+      setSearchWards(wards.data);
+      setCurrentLevel(AddressLevel.Ward);
     } else if (currentLevel === AddressLevel.Ward) {
       setSelectedAddresses((prev) => [
         ...prev,
-        { level: AddressLevel.Ward, ...selectedItem },
+        {
+          level: AddressLevel.Ward,
+          ...selectedItem,
+        },
       ]);
       setCurrentLevel(null);
     }
@@ -76,39 +89,66 @@ export default function AddressSelector(props: {
 
   const resetSelectedAddress = (resetLevel: AddressLevel | null = null) => {
     if (!resetLevel) {
+      // Reset all selections
       setSelectedAddresses([]);
-      setAdministrativeAreas(provinces);
       setCurrentLevel(AddressLevel.Province);
-    } else {
-      let newSelectedAddress = [];
-      for (let i = 0; i < selectedAddresses.length; i++) {
-        if (selectedAddresses[i].level !== resetLevel) {
-          newSelectedAddress.push(selectedAddresses[i]);
-        } else if (selectedAddresses[i].level === resetLevel) break;
-      }
-      setSelectedAddresses(newSelectedAddress);
-      setCurrentLevel(resetLevel);
+      setDistricts([]);
+      setSearchDistricts([]);
+      setWards([]);
+      setSearchWards([]);
+      setAddressDetails("");
+      setSearchValue("");
+      setSearchProvinces(provinces);
+      return;
+    }
 
-      switch (resetLevel) {
-        case AddressLevel.Province:
-          setAdministrativeAreas(provinces);
-          break;
-        case AddressLevel.District:
-        case AddressLevel.Ward:
-          const selectedProvince = provinces.find(
-            (item) => item.Name === selectedAddresses[0]?.name
-          );
-          if (resetLevel === AddressLevel.District) {
-            setAdministrativeAreas(selectedProvince?.Districts ?? []);
-          } else {
-            const selectedDistrict = selectedProvince?.Districts.find(
-              (item) => item.Name === selectedAddresses[1]?.name
-            );
-            setAdministrativeAreas(selectedDistrict?.Wards ?? []);
-          }
-          break;
-        default:
-          break;
+    // Find index of the level to reset to
+    const levelIndex = selectedAddresses.findIndex(
+      (item) => item.level === resetLevel
+    );
+    if (levelIndex === -1) return;
+
+    const newSelected = selectedAddresses.slice(0, levelIndex);
+    setSelectedAddresses(newSelected);
+
+    if (resetLevel === AddressLevel.Province) {
+      setCurrentLevel(AddressLevel.Province);
+      setDistricts([]);
+      setSearchDistricts([]);
+      setWards([]);
+      setSearchWards([]);
+      setAddressDetails("");
+      setSearchValue("");
+      setSearchProvinces(provinces);
+    } else if (resetLevel === AddressLevel.District) {
+      setCurrentLevel(AddressLevel.District);
+      setWards([]);
+      setSearchWards([]);
+      setAddressDetails("");
+      setSearchValue("");
+      // Restore districts for the selected province
+      const province = newSelected.find(
+        (item) => item.level === AddressLevel.Province
+      );
+      if (province) {
+        AddressService.getDistricts(Number(province.id)).then((districts) => {
+          setDistricts(districts.data);
+          setSearchDistricts(districts.data);
+        });
+      }
+    } else if (resetLevel === AddressLevel.Ward) {
+      setCurrentLevel(AddressLevel.Ward);
+      setAddressDetails("");
+      setSearchValue("");
+      // Restore wards for the selected district
+      const district = newSelected.find(
+        (item) => item.level === AddressLevel.District
+      );
+      if (district) {
+        AddressService.getWards(Number(district.id)).then((wards) => {
+          setWards(wards.data);
+          setSearchWards(wards.data);
+        });
       }
     }
   };
@@ -122,20 +162,38 @@ export default function AddressSelector(props: {
 
   const searchAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
-    setSearchableAreas(
-      administrativeAreas.filter((item) =>
-        normalizeString(item.Name).includes(normalizeString(e.target.value))
-      ) as Province[] | District[] | Ward[]
-    );
+    if (currentLevel === AddressLevel.Province) {
+      setSearchProvinces(
+        provinces.filter((item: any) =>
+          normalizeString(item.ProvinceName).includes(
+            normalizeString(e.target.value)
+          )
+        )
+      );
+    } else if (currentLevel === AddressLevel.District) {
+      setSearchDistricts(
+        districts.filter((item: any) =>
+          normalizeString(item.DistrictName).includes(
+            normalizeString(e.target.value)
+          )
+        )
+      );
+    } else if (currentLevel === AddressLevel.Ward) {
+      setSearchWards(
+        wards.filter((item: any) =>
+          normalizeString(item.WardName).includes(
+            normalizeString(e.target.value)
+          )
+        )
+      );
+    }
   };
 
   const fetchAdminBoundaries = async () => {
     try {
-      let data = AddressService.getAddress();
-      let adminBoundaries = await data;
-      setAdministrativeAreas(adminBoundaries);
-      setSearchableAreas(adminBoundaries);
-      setProvinces(adminBoundaries);
+      let provinces = await AddressService.getProvinces();
+      setProvinces(provinces.data);
+      setSearchProvinces(provinces.data);
     } catch (error) {
       console.error("Error fetching data" + error);
     }
@@ -144,10 +202,6 @@ export default function AddressSelector(props: {
   useEffect(() => {
     fetchAdminBoundaries();
   }, []);
-
-  useMemo(() => {
-    setSearchableAreas(administrativeAreas);
-  }, [administrativeAreas]);
 
   return (
     <div className="p-4 flex flex-col h-full">
@@ -221,18 +275,65 @@ export default function AddressSelector(props: {
           selectedAddresses.length === 3 ? "" : "grid grid-cols-2"
         }`}
       >
-        {selectedAddresses.length < 3 &&
-          (searchableAreas as (Province | District | Ward)[]).map((item) => (
-            <div
-              key={item.Id}
-              onClick={() =>
-                handleSelectAddress({ id: item.Id, name: item.Name })
-              }
-              className=" hover:text-primary text-sm cursor-pointer p-2 col-span-1"
-            >
-              {item.Name}
-            </div>
-          ))}
+        {selectedAddresses.length < 1 &&
+          searchProvinces
+            .filter(
+              (item: any) => !item.ProvinceName?.toLowerCase().includes("test")
+            )
+            .map((item: any) => (
+              <div
+                key={item.ProvinceID}
+                onClick={() =>
+                  handleSelectAddress({
+                    id: item.ProvinceID,
+                    name: item.ProvinceName,
+                  })
+                }
+                className=" hover:text-primary text-sm cursor-pointer p-2 col-span-1"
+              >
+                {item.ProvinceName}
+              </div>
+            ))}
+
+        {selectedAddresses.length === 1 &&
+          searchDistricts
+            .filter(
+              (item: any) => !item.DistrictName?.toLowerCase().includes("test")
+            )
+            .map((item: any) => (
+              <div
+                key={item.DistrictID}
+                onClick={() =>
+                  handleSelectAddress({
+                    id: item.DistrictID,
+                    name: item.DistrictName,
+                  })
+                }
+                className="hover:text-primary text-sm cursor-pointer p-2 col-span-1"
+              >
+                {item.DistrictName}
+              </div>
+            ))}
+
+        {selectedAddresses.length === 2 &&
+          searchWards
+            .filter(
+              (item: any) => !item.WardName?.toLowerCase().includes("test")
+            )
+            .map((item: any) => (
+              <div
+                key={item.WardCode}
+                onClick={() =>
+                  handleSelectAddress({
+                    id: item.WardCode,
+                    name: item.WardName,
+                  })
+                }
+                className="hover:text-primary text-sm cursor-pointer p-2 col-span-1"
+              >
+                {item.WardName}
+              </div>
+            ))}
 
         {selectedAddresses.length === 3 && (
           <div>
