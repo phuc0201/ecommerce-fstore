@@ -9,6 +9,7 @@ import ProductInfo from "../components/Product/ProductInfo";
 import type { CartItem } from "../types/cart";
 import { CartService } from "../services/cart.service";
 import { useCart } from "../hooks/useCart";
+import { toast } from "react-toastify";
 
 const Product: React.FC = () => {
   const { slug = "" } = useParams<{ slug?: string }>();
@@ -118,11 +119,17 @@ const Product: React.FC = () => {
   };
 
   const handleAddToCart = (colorId: number) => {
-    handleAddToCartAnimation(colorId);
     if (data) {
       const variant = data.variants.find(
         (v) => v.colorId === colorId && v.sizeId === selectedSize
       );
+
+      if ((variant?.stockQuantity || 0) < quantity) {
+        toast.warning("Sản phẩm đã hết hàng");
+        return;
+      }
+
+      handleAddToCartAnimation(colorId);
 
       const cartItem: CartItem = {
         productId: parseInt(productId),

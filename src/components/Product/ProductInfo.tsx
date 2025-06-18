@@ -55,12 +55,14 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
       if (variant) {
         setSelectedSize(variant?.sizeId);
       }
-      setSelectedSize(sizes[0].id);
     }
   }, [colors, sizes]);
 
   useEffect(() => {
-    const variant = variants.find((v) => v.stockQuantity > 0);
+    setSelectedSize(-1);
+    const variant = variants.find(
+      (v) => v.colorId === selectedColor.id && v.stockQuantity > 0
+    );
     if (variant) {
       setSelectedSize(variant?.sizeId);
     }

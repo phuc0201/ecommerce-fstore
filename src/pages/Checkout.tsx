@@ -14,8 +14,10 @@ import AddressDrawer from "../components/Address/AddressDrawer";
 import { OrderDTO } from "../types/cart";
 import AddressService from "../services/address.service";
 import { OrderService } from "../services/order.service";
-import { BsQrCodeScan } from "react-icons/bs";
+import { BsQrCodeScan, BsTicketPerforated } from "react-icons/bs";
 import { toast } from "react-toastify";
+import VouchersModal from "../components/Voucher/VouchersModal";
+import type { Voucher } from "../types/voucher";
 
 const Checkout: React.FC = () => {
   const { cart } = useCart();
@@ -24,9 +26,15 @@ const Checkout: React.FC = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     "COD" | "BANKING"
   >("COD");
+  const [selectedVoucher, setSelectedVoucher] = useState<Voucher | undefined>();
+  const [isOpenVouchersModal, setIsOpenVouchersModal] =
+    useState<boolean>(false);
   const [shippingFee, setShippingFee] = useState<number>(0);
   const [isShowPaymentSelecter, setIsShowPaymentSelector] =
     useState<boolean>(false);
+  const [discountValue, setDiscountValue] = useState<number>(0);
+
+  const [total, setTotal] = useState<number>(0);
 
   const navigate = useNavigate();
   const [orderDTO, setOrderDTO] = useState<OrderDTO>({
@@ -127,6 +135,9 @@ const Checkout: React.FC = () => {
       return;
     }
     orderDTO.paymentMethod = selectedPaymentMethod;
+    if (selectedVoucher) {
+      orderDTO.voucherId = selectedVoucher.id;
+    }
     const order = await OrderService.createOrder(orderDTO);
     if (selectedPaymentMethod == "BANKING") {
       window.location.href = order.paymentRef;
@@ -136,8 +147,53 @@ const Checkout: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (!isOpenVouchersModal) {
+      setTotal(calculateTotalPrice());
+    }
+  }, [isOpenVouchersModal, shippingFee]);
+
+  useEffect(() => {
+    let subtotal = CartService.calculateTotalPrice(cart?.items || []);
+    let discount = CartService.calculateDiscount(cart?.items || []);
+    let discountFromVoucher = 0;
+    if (selectedVoucher) {
+      if (selectedVoucher.type == "AMOUNT") {
+        discountFromVoucher = selectedVoucher.value;
+      } else {
+        const discount = subtotal * (selectedVoucher.value || 0);
+        const maxDiscount = selectedVoucher.maxDiscount || Infinity;
+        discountFromVoucher = Math.min(discount, maxDiscount);
+      }
+    }
+
+    setDiscountValue(discount + discountFromVoucher);
+  }, [total]);
+
+  const calculateTotalPrice = (): number => {
+    const subtotal = CartService.calculateTotalPrice(cart?.items || []);
+    let total = subtotal;
+    if (selectedVoucher) {
+      if (selectedVoucher.type == "AMOUNT") {
+        total = subtotal - selectedVoucher.value;
+      } else {
+        const discount = subtotal * (selectedVoucher.value || 0);
+        const maxDiscount = selectedVoucher.maxDiscount || Infinity;
+        total = subtotal - Math.min(discount, maxDiscount);
+      }
+    }
+    return total + shippingFee;
+  };
+
   return (
     <>
+      <VouchersModal
+        isOpen={isOpenVouchersModal}
+        onClose={() => setIsOpenVouchersModal(false)}
+        selectedVoucher={selectedVoucher as Voucher}
+        setSelectedVoucher={setSelectedVoucher}
+      />
+
       <header className="border-b border-zinc-200">
         <div className="flex items-center justify-between py-4 mx-auto max-w-7xl lg:px-5 px-10">
           <Link to={"/category"}>
@@ -217,6 +273,16 @@ const Checkout: React.FC = () => {
           </div>
 
           <div className="w-[436px] h-fit p-6 border border-zinc-200 rounded-2xl">
+            {/* VOUCHERS */}
+            <button
+              onClick={() => setIsOpenVouchersModal(true)}
+              className="flex items-center cursor-pointer gap-3 p-3 px-4 mb-2 border border-zinc-200 rounded-xl text-sm w-full"
+            >
+              <BsTicketPerforated className="text-2xl" />
+              <p>Chọn khuyến mãi</p>
+            </button>
+
+            {/* PAYMENT METHOD */}
             <div
               onClick={() => setIsShowPaymentSelector((prev) => !prev)}
               className="relative flex items-center justify-between cursor-pointer gap-2 p-3 px-4 border border-zinc-200 rounded-xl text-sm w-full"
@@ -282,9 +348,7 @@ const Checkout: React.FC = () => {
                 <div className="flex justify-between items-end">
                   <p>Giảm giá</p>
                   <p className="font-medium">
-                    {CartService.calculateDiscount(
-                      cart?.items || []
-                    ).toLocaleString("vi-VN", {
+                    {discountValue.toLocaleString("vi-VN", {
                       style: "currency",
                       currency: "VND",
                     })}
@@ -309,10 +373,7 @@ const Checkout: React.FC = () => {
                 <div className="flex justify-between items-end">
                   <p className="text-sm">Thành tiền</p>
                   <p className="font-medium">
-                    {(
-                      CartService.calculateTotalPrice(cart?.items || []) +
-                      shippingFee
-                    ).toLocaleString("vi-VN", {
+                    {total.toLocaleString("vi-VN", {
                       style: "currency",
                       currency: "VND",
                     })}

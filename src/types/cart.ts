@@ -71,6 +71,7 @@ export class OrderDTO {
   returnUrl: string;
   to_district_id: number;
   to_ward_code: string;
+  voucherId?: number;
 
   constructor(
     name: string = "",
