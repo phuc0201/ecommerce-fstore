@@ -216,6 +216,7 @@ const Checkout: React.FC = () => {
               </div>
 
               <input
+                disabled
                 type="text"
                 value={orderDTO.name}
                 onChange={(e) =>
@@ -225,6 +226,7 @@ const Checkout: React.FC = () => {
                 className="w-full p-3 border border-zinc-200 rounded-full text-sm px-5 focus:outline-none focus:border-color-brand-surface transition-colors duration-300"
               />
               <input
+                disabled
                 type="text"
                 value={orderDTO.phone}
                 onChange={(e) =>
