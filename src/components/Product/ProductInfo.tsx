@@ -22,7 +22,7 @@ type ProductInfoProps = {
   setQuantity: (quantity: number) => void;
   onColorChange: (colorId: number) => void;
   onAddToCart: (colorId: number) => void;
-  setSelectedSize: (size: Size) => void;
+  setSelectedSize: (sizeId: number) => void;
 };
 
 const ProductInfo: React.FC<ProductInfoProps> = ({
@@ -51,18 +51,18 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     }
 
     if (sizes.length > 0) {
-      const variant = variants.find((v) => v.inventory.stockQuantity > 0);
+      const variant = variants.find((v) => v.stockQuantity > 0);
       if (variant) {
-        setSelectedSize(variant?.size);
+        setSelectedSize(variant?.sizeId);
       }
-      setSelectedSize(sizes[0]);
+      setSelectedSize(sizes[0].id);
     }
   }, [colors, sizes]);
 
   useEffect(() => {
-    const variant = variants.find((v) => v.inventory.stockQuantity > 0);
+    const variant = variants.find((v) => v.stockQuantity > 0);
     if (variant) {
-      setSelectedSize(variant?.size);
+      setSelectedSize(variant?.sizeId);
     }
   }, [selectedColor]);
 
@@ -77,7 +77,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   const checkInventory = (colorId: number, sizeId: number): number => {
     return (
       variants.find((v) => v.sizeId === sizeId && v.colorId === colorId)
-        ?.inventory.stockQuantity || 0
+        ?.stockQuantity || 0
     );
   };
 
@@ -121,7 +121,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
               key={size.id}
               onClick={() => {
                 if (checkInventory(selectedColor.id, size.id) > 0) {
-                  setSelectedSize(size);
+                  setSelectedSize(size.id);
                 }
               }}
               className={`w-12 h-12 rounded-full border-2 text-xs relative ${

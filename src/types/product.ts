@@ -19,30 +19,18 @@ export interface Photo {
   colorId: number;
 }
 
-export interface Inventory {
+export interface Brand {
   id: number;
-  productId: number;
-  variantId: number;
-  stockQuantity: number;
-  updatedAt: string;
-  createdAt: string;
+  name: string;
 }
 
 export interface Variant {
   id: number;
   code: string;
-  instock: boolean;
   colorId: number;
   sizeId: number;
   productId: number;
-  color: Color;
-  size: Size;
-  inventory: Inventory;
-}
-
-export interface Brand {
-  id: number;
-  name: string;
+  stockQuantity: number;
 }
 
 export interface Product {
@@ -52,7 +40,6 @@ export interface Product {
   name: string;
   metaDesc: string;
   display: boolean;
-  inventoryStatus: boolean;
   originalPrice: string;
   salePrice: string | null;
   createdDate: string;
@@ -62,10 +49,10 @@ export interface Product {
   brandId: number;
   viewCount: number;
   saleCount: number;
-  category: Category;
-  brand: Brand;
-  photos: Photo[];
   variants: Variant[];
-  colors: Color[];
+  brand: Brand;
+  category: Category;
+  photos: Photo[];
   sizes: Size[];
+  colors: Color[];
 }

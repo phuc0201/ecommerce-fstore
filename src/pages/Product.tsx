@@ -6,7 +6,6 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ProductInfo from "../components/Product/ProductInfo";
-import type { Size } from "../types/product";
 import type { CartItem } from "../types/cart";
 import { CartService } from "../services/cart.service";
 import { useCart } from "../hooks/useCart";
@@ -18,10 +17,7 @@ const Product: React.FC = () => {
   const [onAddToCart, setOnAddToCart] = useState<boolean>(false);
   const [photoAnimate, setPhotoAnimate] = useState<string>("");
   const [crrPhotoId, setCrrPhotoId] = useState<number>(1);
-  const [selectedSize, setSelectedSize] = useState<Size>({
-    id: -1,
-    name: "",
-  });
+  const [selectedSize, setSelectedSize] = useState<number>(-1);
   const [quantity, setQuantity] = useState<number>(1);
   const mainSlider = useRef<Slider | null>(null);
   const thumbSlider = useRef<Slider | null>(null);
@@ -125,7 +121,7 @@ const Product: React.FC = () => {
     handleAddToCartAnimation(colorId);
     if (data) {
       const variant = data.variants.find(
-        (v) => v.colorId === colorId && v.sizeId === selectedSize.id
+        (v) => v.colorId === colorId && v.sizeId === selectedSize
       );
 
       const cartItem: CartItem = {
@@ -135,7 +131,10 @@ const Product: React.FC = () => {
         productName: data.name,
         productImage:
           data.photos.find((photo) => photo.colorId === colorId)?.url || "",
-        size: selectedSize,
+        size: data.sizes.find((s) => s.id === selectedSize) || {
+          id: -1,
+          name: "",
+        },
         color: data.colors.find((c) => c.id === colorId) || {
           id: -1,
           name: "",
@@ -281,7 +280,12 @@ const Product: React.FC = () => {
               onColorChange={handleColorChange}
               onAddToCart={handleAddToCart}
               setSelectedSize={setSelectedSize}
-              selectedSize={selectedSize}
+              selectedSize={
+                data?.sizes.find((s) => s.id === selectedSize) || {
+                  id: -1,
+                  name: "",
+                }
+              }
               quantity={quantity}
               setQuantity={setQuantity}
             />
