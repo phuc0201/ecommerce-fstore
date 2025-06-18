@@ -17,10 +17,10 @@ export const OrderService = {
       service_type_id: null,
       to_district_id: to_district_id,
       to_ward_code: to_ward_code,
-      height: 50,
-      length: 20,
+      height: 10,
+      length: 10,
       weight: 200,
-      width: 20,
+      width: 10,
     };
     const headers = {
       "Content-Type": "application/json",
