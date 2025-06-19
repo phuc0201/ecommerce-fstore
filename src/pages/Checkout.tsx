@@ -18,10 +18,12 @@ import { BsQrCodeScan, BsTicketPerforated } from "react-icons/bs";
 import { toast } from "react-toastify";
 import VouchersModal from "../components/Voucher/VouchersModal";
 import type { Voucher } from "../types/voucher";
+import SceneLoader from "../components/Loader/SceneLoader";
 
 const Checkout: React.FC = () => {
   const { cart } = useCart();
   const [params] = useSearchParams();
+  const [isOrdering, setIsOrdering] = useState<boolean>(false);
   const [isVisibleAddressDrawer, setVisibleAddressDrawer] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     "COD" | "BANKING"
@@ -125,6 +127,7 @@ const Checkout: React.FC = () => {
   }, [cart]);
 
   const handleOrder = async () => {
+    setIsOrdering(true);
     if (
       orderDTO.name === "" ||
       orderDTO.phone === "" ||
@@ -132,6 +135,7 @@ const Checkout: React.FC = () => {
       orderDTO.email === ""
     ) {
       toast.warning("Vui lòng điền đầy đủ thông tin người nhận.");
+      setIsOrdering(false);
       return;
     }
     orderDTO.paymentMethod = selectedPaymentMethod;
@@ -142,6 +146,7 @@ const Checkout: React.FC = () => {
     if (selectedPaymentMethod == "BANKING") {
       window.location.href = order.paymentRef;
     } else {
+      setIsOrdering(false);
       toast.success("Đặt hàng thành công! Hãy kiểm tra email để xem hóa đơn!");
       navigate(PATH.CATEGORY);
     }
@@ -187,6 +192,7 @@ const Checkout: React.FC = () => {
 
   return (
     <>
+      <SceneLoader isOpen={isOrdering} />
       <VouchersModal
         isOpen={isOpenVouchersModal}
         onClose={() => setIsOpenVouchersModal(false)}
