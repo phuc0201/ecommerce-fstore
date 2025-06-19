@@ -10,4 +10,5 @@ export interface Voucher {
   quantity: number;
   usedQuantity: number;
   budgetUsed: number;
+  fromValue: number | null;
 }

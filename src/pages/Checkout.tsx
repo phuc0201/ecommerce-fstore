@@ -161,7 +161,7 @@ const Checkout: React.FC = () => {
       if (selectedVoucher.type == "AMOUNT") {
         discountFromVoucher = selectedVoucher.value;
       } else {
-        const discount = subtotal * (selectedVoucher.value || 0);
+        const discount = subtotal * (selectedVoucher.value / 100 || 0);
         const maxDiscount = selectedVoucher.maxDiscount || Infinity;
         discountFromVoucher = Math.min(discount, maxDiscount);
       }
@@ -177,7 +177,7 @@ const Checkout: React.FC = () => {
       if (selectedVoucher.type == "AMOUNT") {
         total = subtotal - selectedVoucher.value;
       } else {
-        const discount = subtotal * (selectedVoucher.value || 0);
+        const discount = subtotal * (selectedVoucher.value / 100 || 0);
         const maxDiscount = selectedVoucher.maxDiscount || Infinity;
         total = subtotal - Math.min(discount, maxDiscount);
       }
