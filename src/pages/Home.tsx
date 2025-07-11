@@ -97,7 +97,7 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <div className={`-mt-[68px] grid gap-16`}>
+    <div className={`md:-mt-[68px] grid gap-16`}>
       <Carousel slides={slides1} />
       <Carousel slides={slides2} variant="center" />
       <Carousel slides={slides3} />
@@ -106,7 +106,7 @@ const Home: React.FC = () => {
         <h1 className="mb-3 text-center text-lg lg:mb-8 lg:text-left lg:text-3xl font-semibold">
           THỜI TRANG KẾT HỢP CÔNG NGHỆ
         </h1>
-        <div className="grid grid-cols-2 gap-x-2 gap-y-3 lg:grid-cols-4 lg:gap-x-4">
+        <div className="grid gap-x-2 gap-y-3 lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-x-4">
           {technologyFashionItems.map((item, index) => (
             <img
               key={index}

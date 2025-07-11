@@ -92,14 +92,14 @@ const NormalCarousel: React.FC<CarouselProps> = ({ slides }) => {
 
         {/* Navigation arrows */}
         <button
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white/90 text-gray-800 rounded-full w-12 h-12 shadow-lg transition-all duration-200 hover:scale-110"
+          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white/90 text-gray-500 rounded-full md:w-12 md:h-12 h-8 w-8 shadow-lg transition-all duration-200 hover:scale-110"
           onClick={prevSlide}
         >
           <GoChevronLeft className="w-6 h-6 m-auto" />
         </button>
 
         <button
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white/90 text-gray-800 rounded-full w-12 h-12 shadow-lg transition-all duration-200 hover:scale-110"
+          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white/90 text-gray-500 rounded-full md:w-12 md:h-12 h-8 w-8 shadow-lg transition-all duration-200 hover:scale-110"
           onClick={nextSlide}
         >
           <GoChevronRight className="w-6 h-6 m-auto" />

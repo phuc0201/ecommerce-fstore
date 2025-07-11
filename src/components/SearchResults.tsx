@@ -37,7 +37,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
             </div>
           ) : (
             <div className="w-full h-full flex">
-              <div className="m-auto">
+              <div className="m-auto text-center">
                 <p>Không có sản phẩm nào phù hợp nhu cầu của bạn</p>
                 <img
                   src="./assets/imgs/empty-listing.svg"

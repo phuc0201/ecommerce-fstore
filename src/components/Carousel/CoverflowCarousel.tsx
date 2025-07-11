@@ -99,10 +99,10 @@ const CoverflowCarousel: React.FC<Props> = ({ slides }) => {
       <section
         onMouseEnter={() => setIsAutoPlaying(false)}
         onMouseLeave={() => setIsAutoPlaying(true)}
-        className="max-w-screen-sm lg:max-w-full lg:px-12"
+        className="max-w-full md:px-8 px-4"
       >
         <header className="flex items-center justify-between mb-10">
-          <h1 className="font-semibold uppercase text-3xl text-black">
+          <h1 className="font-semibold uppercase lg:text-3xl text-xl text-black">
             BST POLO COOL 2025
           </h1>
           <div className="flex items-center gap-3">
@@ -123,11 +123,12 @@ const CoverflowCarousel: React.FC<Props> = ({ slides }) => {
             </button>
           </div>
         </header>
-        <div className="relative w-full min-h-[700px] overflow-hidden">
+
+        <div className="relative w-full 2xl:min-h-[700px] overflow-hidden">
           {/* Slides Container */}
           <div className="flex items-center justify-center">
             <div
-              className="relative h-[700px] aspect-video"
+              className="relative w-full aspect-video"
               style={{ perspective: "1000px" }}
             >
               {slides.map((slide, index) => (
@@ -137,7 +138,9 @@ const CoverflowCarousel: React.FC<Props> = ({ slides }) => {
                   style={getSlideStyle(index)}
                   onClick={() => goToSlide(index)}
                 >
-                  <div className={`w-full h-full rounded-2xl overflow-hidden`}>
+                  <div
+                    className={`w-full aspect-video rounded-2xl overflow-hidden`}
+                  >
                     <img
                       loading="lazy"
                       src={slide.image}

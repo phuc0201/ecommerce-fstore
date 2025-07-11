@@ -96,8 +96,8 @@ const Category: React.FC = () => {
 
         <div className="border-0 border-b-[1px] border-zinc-200 py-4">
           <div className="sectionContainer">
-            <div className="flex items-center justify-between">
-              <div className="flex gap-4">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex flex-wrap gap-4">
                 <button
                   onClick={() =>
                     setQueryParam("orderType", filter.orderType !== 3 ? 3 : 4)

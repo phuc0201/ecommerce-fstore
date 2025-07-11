@@ -25,6 +25,20 @@ const Product: React.FC = () => {
   const photoAnimateEl = useRef<HTMLDivElement | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const { setCart } = useCart();
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkIsMobile);
+    };
+  }, []);
 
   useEffect(() => {
     if (data?.photos && data.photos.length > 0) {
@@ -179,7 +193,7 @@ const Product: React.FC = () => {
   return (
     <div className="lg:min-h-[900px]">
       <div className="border-0 border-b-[1px] border-zinc-200 py-4">
-        <div className="max-w-[1280px] mx-auto">
+        <div className="sectionContainer mx-auto">
           <div className="text-sm">
             <span className="text-zinc-500 mr-1">
               <Link to={"/"}>Trang chủ</Link> /
@@ -192,12 +206,12 @@ const Product: React.FC = () => {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1280px] py-8">
-        <div className="flex gap-12">
-          <div className="flex gap-3 w-[648px]">
+      <div className="sectionContainer mx-auto py-8">
+        <div className="flex lg:flex-row flex-col lg:items-start items-center gap-12">
+          <div className="flex gap-3 xl:w-[648px]">
             {/* Thumbnail Slider */}
             <div
-              className={`overflow-y-hidden h-[704px] min-w-[108px] ${
+              className={`overflow-y-hidden h-[704px] min-w-[108px] xl:block hidden ${
                 (data?.photos.length || 0) > 0 ? "" : "bg-zinc-100 rounded-lg"
               }`}
             >
@@ -225,7 +239,11 @@ const Product: React.FC = () => {
 
             {/* Main Slider */}
             <div className="relative w-full">
-              <div className="w-[528px] h-[704px] relative bg-zinc-100 rounded-lg">
+              <div
+                className={`w-[528px] h-[704px] relative rounded-lg sm:px-0 px-4 ${
+                  !isMobile && "bg-zinc-100 "
+                }`}
+              >
                 <div className="">
                   <div
                     className={`absolute inset-0 bg-black/30 transition-all rounded-2xl durantion-1000 ${
@@ -241,7 +259,7 @@ const Product: React.FC = () => {
                     <img
                       src={photoAnimate || "photo"}
                       alt="photo"
-                      className="rounded-2xl w-full h-full object-cover transition-all duration-500"
+                      className="rounded-2xl w-full h-full object-contain transition-all duration-500"
                     />
                   </div>
                 </div>

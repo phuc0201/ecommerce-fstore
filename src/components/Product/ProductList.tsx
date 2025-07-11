@@ -11,7 +11,7 @@ const ProductList: React.FC<{
     <div
       className={`grid ${
         !isGalleryMode
-          ? "gap-y-10 gap-3 grid-cols-4 mb-10"
+          ? "gap-y-10 gap-3 lg:grid-cols-4 sm:grid-cols-3 grid-cols-1 mb-10"
           : "mb-1 gap-1 grid-cols-6"
       }`}
     >
